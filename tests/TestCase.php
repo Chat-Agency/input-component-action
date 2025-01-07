@@ -2,9 +2,9 @@
 
 namespace ChatAgency\InputComponentAction\Tests;
 
+use ChatAgency\InputComponentAction\InputComponentActionServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;
 use Orchestra\Testbench\TestCase as Orchestra;
-use ChatAgency\InputComponentAction\InputComponentActionServiceProvider;
 
 class TestCase extends Orchestra
 {

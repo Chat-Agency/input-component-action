@@ -2,9 +2,9 @@
 
 namespace ChatAgency\InputComponentAction;
 
+use ChatAgency\InputComponentAction\Commands\InputComponentActionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
-use ChatAgency\InputComponentAction\Commands\InputComponentActionCommand;
 
 class InputComponentActionServiceProvider extends PackageServiceProvider
 {
