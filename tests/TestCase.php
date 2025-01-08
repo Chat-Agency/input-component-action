@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Tests;
 
 use ChatAgency\InputComponentAction\InputComponentActionServiceProvider;

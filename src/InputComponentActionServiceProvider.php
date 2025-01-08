@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction;
 
 use ChatAgency\InputComponentAction\Commands\InputComponentActionCommand;
