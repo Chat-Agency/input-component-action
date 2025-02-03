@@ -1,12 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Recipes;
 
-use Closure;
-use Chatagency\CrudAssistant\RecipeBase;
-use App\Cruds\Actions\Form\InputPresenterAction;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
+use Chatagency\CrudAssistant\RecipeBase;
 use ChatAgency\InputComponentAction\InputComponentAction;
+use Closure;
 
 class InputPresenterRecipe extends RecipeBase implements RecipeInterface
 {

@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
-use ChatAgency\InputComponentAction\Commands\InputComponentActionCommand;
 use Spatie\LaravelPackageTools\Package;
 use Spatie\LaravelPackageTools\PackageServiceProvider;
 
@@ -18,10 +17,9 @@ class InputComponentActionServiceProvider extends PackageServiceProvider
          * More info: https://github.com/spatie/laravel-package-tools
          */
         $package
-            ->name('input-component-action')
-            // ->hasConfigFile()
-            // ->hasViews()
-            // ->hasMigration('create_input_component_action_table')
-             ;
+            ->name('input-component-action');
+        // ->hasConfigFile()
+        // ->hasViews()
+        // ->hasMigration('create_input_component_action_table')
     }
 }
