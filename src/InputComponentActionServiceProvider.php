@@ -19,9 +19,9 @@ class InputComponentActionServiceProvider extends PackageServiceProvider
          */
         $package
             ->name('input-component-action')
-            ->hasConfigFile()
-            ->hasViews()
-            ->hasMigration('create_input_component_action_table')
-            ->hasCommand(InputComponentActionCommand::class);
+            // ->hasConfigFile()
+            // ->hasViews()
+            // ->hasMigration('create_input_component_action_table')
+             ;
     }
 }
