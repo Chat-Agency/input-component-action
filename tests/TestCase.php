@@ -2,7 +2,7 @@
 
 declare(strict_types=1);
 
-namespace ChatAgency\InputComponentAction\Tests;
+namespace Tests;
 
 use ChatAgency\InputComponentAction\InputComponentActionServiceProvider;
 use Illuminate\Database\Eloquent\Factories\Factory;

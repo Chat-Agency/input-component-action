@@ -1,48 +1,24 @@
 <?php
 
-declare(strict_types=1);
-
 namespace ChatAgency\InputComponentAction\Recipes;
 
-use Chatagency\CrudAssistant\Contracts\RecipeInterface;
-use Chatagency\CrudAssistant\RecipeBase;
-use ChatAgency\InputComponentAction\InputComponentAction;
+use ChatAgency\InputComponentAction\Configs\ComponentConfig;
 use Closure;
+use Chatagency\CrudAssistant\Concerns\isRecipe;
+use Chatagency\CrudAssistant\Contracts\RecipeInterface;
+use ChatAgency\InputComponentAction\InputComponentAction;
 
-class InputPresenterRecipe extends RecipeBase implements RecipeInterface
+class InputPresenterRecipe implements RecipeInterface
 {
-    public string $title;
+    use isRecipe;
 
-    public $helpText;
+    public function __construct(
+        
+    ) 
+    {
+        
+    }
 
-    public string $invalidFeedback;
-
-    public array $labelAttributes;
-
-    public array $extra;
-
-    /**
-     * @var string|Closure
-     */
-    public $theme;
-
-    public $label;
-
-    public $prepend;
-
-    public $append;
-
-    /**
-     * @var string|Closure
-     */
-    public $value;
-
-    public array $accessors;
-
-    /**
-     * Recipe action
-     *
-     * @var string
-     */
     protected $action = InputComponentAction::class;
+
 }
