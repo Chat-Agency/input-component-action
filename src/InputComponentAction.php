@@ -9,8 +9,6 @@ use Chatagency\CrudAssistant\InputCollection;
 use Chatagency\CrudAssistant\Concerns\IsAction;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;
-use ChatAgency\InputComponentAction\Components\GroupComponent;
-use ChatAgency\InputComponentAction\Configs\ComponentConfig;
 use ChatAgency\InputComponentAction\Recipes\InputPresenterRecipe;
 use Illuminate\Contracts\Support\Htmlable;
 
@@ -37,6 +35,7 @@ class InputComponentAction implements ActionInterface
 
     public function execute(InputCollection|InputInterface|\IteratorAggregate $input)
     {
+        
         $output = $this->getOutput();
         /**
          * @var DataContainer<InputInterface> $inputs
