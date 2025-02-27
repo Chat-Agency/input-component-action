@@ -2,23 +2,33 @@
 
 namespace ChatAgency\InputComponentAction\Recipes;
 
-use ChatAgency\InputComponentAction\Configs\ComponentConfig;
 use Closure;
 use Chatagency\CrudAssistant\Concerns\isRecipe;
+use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\InputComponentAction;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 
 class InputPresenterRecipe implements RecipeInterface
 {
     use isRecipe;
 
-    public function __construct(
-        
-    ) 
-    {
-        
-    }
-
     protected $action = InputComponentAction::class;
+
+    public function __construct(
+        public readonly string|ComponentEnum|null $inputType = null,
+        public readonly ?Closure $value = null,
+        public readonly array $inputTheme = [],
+        public readonly ?Closure $wrapper = null,
+        public readonly ?Closure $input = null,
+        public readonly string|Closure|null $label = null,
+        public readonly ?Closure $error = null,
+        public readonly bool $disableLabel = false,
+        public readonly bool $disableError = false,
+    )
+    {
+    }
 
 }

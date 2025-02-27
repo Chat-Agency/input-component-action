@@ -10,6 +10,5 @@ readonly class ComponentConfig
         public array $theme = [],
     ) 
     {
-        
     }
 }

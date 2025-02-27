@@ -2,33 +2,44 @@
 
 namespace ChatAgency\InputComponentAction\Configs\Groups;
 
-use ChatAgency\InputComponentAction\Components\InputComponent;
-use ChatAgency\InputComponentAction\Configs\ComponentConfig;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
 
-class DefaultGroup
+final class DefaultGroup
 {
+    private ?BackendComponent $label;
+    private ?BackendComponent $input;
+    private ?BackendComponent $error;
+
     /**
-     * @param ComponentConfig[] $configs
+     * @return BackendComponent[]
      */
-    public function __construct(private array $configs) 
-    {
-        
-    }
-
-    public function processGroup()
-    {
-       
-    }
-
-    public function getGroup(): array
+    public function getGroup() : array
     {
         return [
-            InputComponent::class => new InputComponent($this->getConfig(InputComponent::class)),
+            $this->label,
+            $this->input,
+            $this->error,
         ];
     }
 
-    public function getConfig(string $configType) : ComponentConfig
+    public function setLabel($label): static
     {
-        return $this->configs[$configType] ?? new ComponentConfig();
+        $this->label = $label;
+
+        return $this;
+    }
+
+    public function setInput($input): static
+    {
+        $this->input = $input;
+
+        return $this;
+    }
+
+    public function setError($error): static
+    {
+        $this->error = $error;
+
+        return $this;
     }
 }
