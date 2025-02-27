@@ -1,6 +1,6 @@
 <?php
 
-namespace ChatAgency\InputComponentAction\Configs\Groups;
+namespace ChatAgency\InputComponentAction\Groups;
 
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 

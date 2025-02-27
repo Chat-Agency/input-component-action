@@ -7,9 +7,6 @@ use Chatagency\CrudAssistant\Concerns\isRecipe;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\InputComponentAction;
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 
 class InputPresenterRecipe implements RecipeInterface
 {
