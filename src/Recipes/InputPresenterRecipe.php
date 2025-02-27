@@ -20,10 +20,12 @@ class InputPresenterRecipe implements RecipeInterface
     public function __construct(
         public readonly string|ComponentEnum|null $inputType = null,
         public readonly ?Closure $value = null,
+        public readonly ?Closure $input = null,
         public readonly array $inputTheme = [],
         public readonly ?Closure $wrapper = null,
-        public readonly ?Closure $input = null,
+        public readonly array $wrapperTheme = [],
         public readonly string|Closure|null $label = null,
+        public readonly array $labelTheme = [],
         public readonly ?Closure $error = null,
         public readonly bool $disableLabel = false,
         public readonly bool $disableError = false,
