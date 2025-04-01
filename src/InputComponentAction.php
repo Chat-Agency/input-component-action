@@ -11,18 +11,19 @@ use Chatagency\CrudAssistant\Concerns\IsAction;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;;
+use ChatAgency\InputComponentAction\Groups\DefaultGroup;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Builders\ComponentBuilder;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\InputComponentAction\Groups\DefaultGroup;
-use ChatAgency\InputComponentAction\Recipes\InputPresenterRecipe;
+use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class InputComponentAction implements ActionInterface 
 {
     use IsAction;
 
-    private int $count = 0;
+    /** @var DataContainer<string, DataContainer> */
+    protected $output;
 
     public function __construct(
         private array $values = [],
@@ -31,13 +32,14 @@ final class InputComponentAction implements ActionInterface
     ) 
     {
         $this->initOutput();
+        
+        $this->output->inputs = new DataContainer();
+        $this->output->meta = new DataContainer();
+        
     }
 
     public function prepare(): static
     {
-        $this->output->inputs = new DataContainer();
-        $this->output->meta = new DataContainer();
-        
         return $this;
     }
 
@@ -91,56 +93,16 @@ final class InputComponentAction implements ActionInterface
     public function resolveGroup(InputInterface $input): array
     {
         
-        $group = new DefaultGroup();
-
-        $group->setLabel($this->getLabelComponent($input))
-            ->setInput($this->getInputComponent($input))
-            ->setError($this->getErrorComponent($input));
+        $group = new DefaultGroup(
+            input: $input, 
+            recipe: $this->getRecipe($input),
+            identifier: $this->getIdentifier(),
+            value: $this->getValue($input),
+            error: $this->getError($input),
+        );
 
         return $group->getGroup();
 
-    }
-
-    public function getLabelComponent(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
-    {
-        $recipe = $this->getRecipe($input);
-        $component = ComponentBuilder::make(ComponentEnum::LABEL);
-
-        $label = $recipe->label ?? $input->getLabel();
-        $for = $input->getName();
-
-        $component->setContent($label)
-            ->setAttribute('for', $for);
-
-        return $component;
-            
-    }
-
-    public function getInputComponent(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
-    {
-        $recipe = $this->getRecipe($input);
-        
-        $name = $input->getLabel();
-        $id = $input->getName();
-        $value = $recipe->value ?? $this->getValue($input);
-        $type = $recipe->type ?? ComponentEnum::TEXT_INPUT;
-
-        $component = ComponentBuilder::make($type);
-
-        $component->setAttribute('name', $name)
-            ->setAttribute('id', $id)
-            ->setAttribute('value', $value)
-            ->setAttribute('type', 'text');
-
-        return $component;
-    }
-
-    public function getErrorComponent(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
-    {
-        $recipe = $this->getRecipe($input);
-        $component = ComponentBuilder::make(ComponentEnum::PARAGRAPH);
-
-        return $component;
     }
 
     public function getWrapper(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
@@ -151,18 +113,18 @@ final class InputComponentAction implements ActionInterface
         return $component;
     }
 
-    public function getRecipe(InputInterface $input) : InputPresenterRecipe
+    public function getRecipe(InputInterface $input) : InputComponentRecipe
     {
-        return $input->getRecipe($this->getIdentifier()) ?? new InputPresenterRecipe();
+        return $input->getRecipe($this->getIdentifier()) ?? new InputComponentRecipe();
     }
   
-    public function getValue(InputInterface $inputInterface): string
+    public function getValue(InputInterface $inputInterface): ?string
     {
-        return '';
+        return null;
     }
 
-    public function getError(InputInterface $inputInterface): string
+    public function getError(InputInterface $inputInterface): ?string
     {
-        return '';
+        return null;
     }
 }
