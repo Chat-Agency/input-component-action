@@ -3,7 +3,9 @@
 namespace ChatAgency\InputComponentAction\Composers;
 
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
+use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
 use ChatAgency\BackendComponents\Builders\ComponentBuilder;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
@@ -16,6 +18,7 @@ class LabelComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
+        private ThemeManager $themeManager,
     ) 
     {
     }
@@ -24,12 +27,13 @@ class LabelComposer implements ComponentComposer
     {
         $input = $this->input;
         $recipe = $this->recipe;
+        $attributes = $recipe->inputAttributes ?? [];
 
-        $component = ComponentBuilder::make(ComponentEnum::LABEL);
+        $component = new MainBackendComponent(ComponentEnum::LABEL, $this->themeManager);
 
         $label = $recipe->label ?? $input->getLabel();
-        $for = $input->getName();
-
+        $for = $attributes['for'] ?? $input->getName();
+        
         $component->setContent($label)
             ->setAttribute('for', $for);
 

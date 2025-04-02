@@ -4,15 +4,20 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
+use Closure;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
 use Chatagency\CrudAssistant\Concerns\IsAction;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
+use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;;
 use ChatAgency\InputComponentAction\Groups\DefaultGroup;
+use ChatAgency\InputComponentAction\Utilities\ThemeUtil;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use ChatAgency\BackendComponents\Builders\ComponentBuilder;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
@@ -22,7 +27,13 @@ final class InputComponentAction implements ActionInterface
 {
     use IsAction;
 
+    private ?ThemeManager $themeManager = null;
+
+    private array|Closure $defaultInputTheme = [];
     /** @var DataContainer<string, DataContainer> */
+
+    private array|Closure $defaultWrapperTheme = [];
+
     protected $output;
 
     public function __construct(
@@ -32,10 +43,31 @@ final class InputComponentAction implements ActionInterface
     ) 
     {
         $this->initOutput();
-        
+
         $this->output->inputs = new DataContainer();
         $this->output->meta = new DataContainer();
         
+    }
+
+    public function setThemeManager(ThemeManager $themeManager): static
+    {
+        $this->themeManager = $themeManager;
+
+        return $this;
+    }
+
+    public function setDefaultInputTheme(array|Closure $defaultInputTheme): static
+    {
+        $this->defaultInputTheme = $defaultInputTheme;
+        
+        return $this;
+    }
+
+    public function setDefaultWrapperTheme(array|Closure $defaultWrapperTheme)
+    {
+        $this->defaultWrapperTheme = $defaultWrapperTheme;
+
+        return $this;
     }
 
     public function prepare(): static
@@ -65,12 +97,12 @@ final class InputComponentAction implements ActionInterface
         return $this->output;
     }
 
-    /**
-     * Recursively resolve inputs 
-     * and input collections.
-     */
     public function resolveInputs(InputCollection|InputInterface|\IteratorAggregate $input): array|BackendComponent|ContentComponent 
     {
+        /**
+         * Recursively resolve inputs 
+         * and input collections.
+         */
         if (CrudAssistant::isInputCollection($input) && $this->controlsRecursion()) {
             
             $wrapper = $this->getWrapper($input);
@@ -96,9 +128,10 @@ final class InputComponentAction implements ActionInterface
         $group = new DefaultGroup(
             input: $input, 
             recipe: $this->getRecipe($input),
-            identifier: $this->getIdentifier(),
+            themeManager: $this->resolveThemeManager($input),
             value: $this->getValue($input),
             error: $this->getError($input),
+            defaultInputTheme: $this->defaultInputTheme,
         );
 
         return $group->getGroup();
@@ -108,7 +141,15 @@ final class InputComponentAction implements ActionInterface
     public function getWrapper(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
     {
         $recipe = $this->getRecipe($input);
-        $component = ComponentBuilder::make(ComponentEnum::DIV);
+
+        $component = new MainBackendComponent(ComponentEnum::DIV, $this->resolveThemeManager($input));
+
+        $component->setThemes(
+            ThemeUtil::resolveTheme(
+                theme: $recipe->wrapperTheme ?? $this->defaultWrapperTheme,
+                type: ComponentEnum::DIV
+            )
+        );
 
         return $component;
     }
@@ -127,4 +168,11 @@ final class InputComponentAction implements ActionInterface
     {
         return null;
     }
+
+    public function resolveThemeManager(InputInterface $input): ThemeManager
+    {
+        return $this->getRecipe($input)->themeManager ?? $this->defaultThemeManager ?? new LocalThemeManager;
+
+    }
+
 }
