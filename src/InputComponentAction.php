@@ -29,11 +29,15 @@ final class InputComponentAction implements ActionInterface
 
     private ?ThemeManager $themeManager = null;
 
-    private array|Closure $defaultInputTheme = [];
-    /** @var DataContainer<string, DataContainer> */
-
     private array|Closure $defaultWrapperTheme = [];
 
+    private array|Closure $defaultInputTheme = [];
+
+    private array|Closure $defaultLabelTheme = [];
+
+    private array|Closure $defaultErrorTheme = [];
+
+    /** @var DataContainer<DataContainer> */
     protected $output;
 
     public function __construct(
@@ -63,9 +67,15 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function setDefaultWrapperTheme(array|Closure $defaultWrapperTheme)
+    public function setDefaultWrapperTheme(array|Closure $defaultWrapperTheme): static
     {
         $this->defaultWrapperTheme = $defaultWrapperTheme;
+
+        return $this;
+    }
+    public function setDefaultLabelTheme(array|Closure $defaultLabelTheme): static
+    {
+        $this->defaultLabelTheme = $defaultLabelTheme;
 
         return $this;
     }
@@ -132,6 +142,8 @@ final class InputComponentAction implements ActionInterface
             value: $this->getValue($input),
             error: $this->getError($input),
             defaultInputTheme: $this->defaultInputTheme,
+            defaultLabelTheme: $this->defaultLabelTheme,
+            defaultErrorTheme: $this->defaultErrorTheme,
         );
 
         return $group->getGroup();

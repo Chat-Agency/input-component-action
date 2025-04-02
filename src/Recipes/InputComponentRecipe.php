@@ -22,17 +22,19 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly ?Closure $inputCallback = null,
         public readonly array $inputAttributes = [],
         public readonly ?array $inputTheme = null,
+
         public readonly bool $labelAsInputContent = false,
         public readonly string|Closure|null $labelCallback = null,
         public readonly array $labelAttributes = [],
         public readonly ?array $labelTheme = null,
+
         public readonly ?Closure $wrapperCallback = null,
         public readonly ?array $wrapperTheme = null,
+
         public readonly ?Closure $errorCallback = null,
         public readonly ?array $errorTheme = null,
+
         public readonly ?ThemeManager $themeManager = null,
-        public readonly bool $disableLabel = false,
-        public readonly bool $disableError = false,
     )
     {
     }

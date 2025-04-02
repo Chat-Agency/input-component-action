@@ -9,7 +9,7 @@ use ChatAgency\InputComponentAction\Concerns\isInputGroup;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
-final class DefaultGroup
+final class InputLabelErrorGroup
 {
     use isInputGroup;
 
@@ -32,8 +32,8 @@ final class DefaultGroup
     public function getGroup() : array
     {
         return [
-            $this->getLabelComponent(),
             $this->getInputComponent(),
+            $this->getLabelComponent(),
             $this->getErrorComponent(),
         ];
     }
