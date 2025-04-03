@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
-use Closure;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
@@ -12,13 +11,14 @@ use Chatagency\CrudAssistant\Concerns\IsAction;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;;
 use ChatAgency\InputComponentAction\Groups\DefaultGroup;
 use ChatAgency\InputComponentAction\Utilities\ThemeUtil;
+use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Themes\LocalThemeManager;
-use ChatAgency\BackendComponents\Builders\ComponentBuilder;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -29,13 +29,7 @@ final class InputComponentAction implements ActionInterface
 
     private ?ThemeManager $themeManager = null;
 
-    private array|Closure $defaultWrapperTheme = [];
-
-    private array|Closure $defaultInputTheme = [];
-
-    private array|Closure $defaultLabelTheme = [];
-
-    private array|Closure $defaultErrorTheme = [];
+    private ?ThemeBag $themeBag = null;
 
     /** @var DataContainer<DataContainer> */
     protected $output;
@@ -60,22 +54,9 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function setDefaultInputTheme(array|Closure $defaultInputTheme): static
+    public function setThemeBag(ThemeBag $themeBag): static
     {
-        $this->defaultInputTheme = $defaultInputTheme;
-        
-        return $this;
-    }
-
-    public function setDefaultWrapperTheme(array|Closure $defaultWrapperTheme): static
-    {
-        $this->defaultWrapperTheme = $defaultWrapperTheme;
-
-        return $this;
-    }
-    public function setDefaultLabelTheme(array|Closure $defaultLabelTheme): static
-    {
-        $this->defaultLabelTheme = $defaultLabelTheme;
+        $this->themeBag = $themeBag;
 
         return $this;
     }
@@ -141,9 +122,7 @@ final class InputComponentAction implements ActionInterface
             themeManager: $this->resolveThemeManager($input),
             value: $this->getValue($input),
             error: $this->getError($input),
-            defaultInputTheme: $this->defaultInputTheme,
-            defaultLabelTheme: $this->defaultLabelTheme,
-            defaultErrorTheme: $this->defaultErrorTheme,
+            themeBag: $this->getThemeBag(),
         );
 
         return $group->getGroup();
@@ -158,7 +137,7 @@ final class InputComponentAction implements ActionInterface
 
         $component->setThemes(
             ThemeUtil::resolveTheme(
-                theme: $recipe->wrapperTheme ?? $this->defaultWrapperTheme,
+                theme: $recipe->wrapperTheme ?? $this->getThemeBag()->getWrapperTheme(),
                 type: ComponentEnum::DIV
             )
         );
@@ -185,6 +164,11 @@ final class InputComponentAction implements ActionInterface
     {
         return $this->getRecipe($input)->themeManager ?? $this->defaultThemeManager ?? new LocalThemeManager;
 
+    }
+
+    private function getThemeBag(): ThemeBag
+    {
+        return $this->themeBag ?? new DefaultThemeBag();
     }
 
 }

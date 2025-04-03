@@ -17,7 +17,7 @@ trait isInputGroup
             input: $this->input,  
             recipe: $this->recipe,
             themeManager: $this->themeManager,
-            defaultLabelTheme: $this->defaultLabelTheme,
+            defaultLabelTheme: $this->themeBag->getLabelTheme(),
         );
 
         return $composer->build();
@@ -31,7 +31,7 @@ trait isInputGroup
             recipe: $this->recipe,
             themeManager: $this->themeManager,
             value: $this->value,
-            defaultInputTheme: $this->defaultInputTheme,
+            defaultInputTheme: $this->themeBag->getInputTheme(),
         );
 
         return $composer->build();

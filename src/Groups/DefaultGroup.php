@@ -4,6 +4,7 @@ namespace ChatAgency\InputComponentAction\Groups;
 
 use Closure;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isInputGroup;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
@@ -19,9 +20,7 @@ final class DefaultGroup
         private ThemeManager $themeManager,
         private ?string $value = null,
         private ?string $error = null,
-        private array|Closure $defaultInputTheme = [],
-        private array|Closure $defaultLabelTheme = [],
-        private array|Closure $defaultErrorTheme = [],
+        private ?ThemeBag $themeBag = null,
     ) 
     {
     }
