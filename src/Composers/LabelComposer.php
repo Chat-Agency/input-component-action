@@ -3,15 +3,17 @@
 namespace ChatAgency\InputComponentAction\Composers;
 
 use Closure;
-use ChatAgency\InputComponentAction\Bags\DefaultAttributeBag;
-use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Bags\DefaultAttributeBag;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
@@ -28,7 +30,7 @@ final class LabelComposer implements ComponentComposer
     {
     }
 
-    public function build() : BackendComponent
+    public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
         $input = $this->input;
         $recipe = $this->recipe;

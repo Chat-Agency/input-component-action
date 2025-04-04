@@ -9,6 +9,7 @@ use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
 use ChatAgency\InputComponentAction\InputComponentAction;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
@@ -30,7 +31,7 @@ final class InputComposer implements ComponentComposer
     {
     }
 
-    public function build(): BackendComponent
+    public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
        return $this->buildInputComponent($this->input, $this->recipe);
     }

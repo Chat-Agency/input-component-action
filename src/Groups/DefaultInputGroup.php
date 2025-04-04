@@ -6,18 +6,18 @@ use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Concerns\isInputGroup;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 
-final class InputLabelErrorGroup implements InputGroup
+final class DefaultInputGroup implements InputGroup
 {
     use isInputGroup;
 
     /**
      * @return BackendComponent[]
      */
-    public function getGroup(): array
+    public function getGroup() : array
     {
         return [
-            $this->getInputComponent(),
             $this->getLabelComponent(),
+            $this->getInputComponent(),
             $this->getErrorComponent(),
         ];
     }

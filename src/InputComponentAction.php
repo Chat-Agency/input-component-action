@@ -8,29 +8,30 @@ use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
 use Chatagency\CrudAssistant\Concerns\IsAction;
-use ChatAgency\BackendComponents\Enums\ComponentEnum;
-use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;;
-use ChatAgency\InputComponentAction\Groups\DefaultGroup;
-use ChatAgency\InputComponentAction\Utilities\ThemeUtil;
+use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Composers\WrapperComposer;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class InputComponentAction implements ActionInterface 
 {
     use IsAction;
 
-    private ?ThemeManager $themeManager = null;
+    private ?ThemeManager $defaultThemeManager = null;
 
-    private ?ThemeBag $themeBag = null;
+    private ?InputGroup $defaultInputGroup = null;
+    
+    private ?ThemeBag $defaultThemeBag = null;
 
     /** @var DataContainer<DataContainer> */
     protected $output;
@@ -48,16 +49,23 @@ final class InputComponentAction implements ActionInterface
         
     }
 
-    public function setThemeManager(ThemeManager $themeManager): static
+    public function setThemeManager(ThemeManager $defaultThemeManager): static
     {
-        $this->themeManager = $themeManager;
+        $this->defaultThemeManager = $defaultThemeManager;
 
         return $this;
     }
 
-    public function setThemeBag(ThemeBag $themeBag): static
+    public function setDefaultInputGroup(InputGroup $defaultInputGroup): static
     {
-        $this->themeBag = $themeBag;
+        $this->defaultInputGroup = $defaultInputGroup;
+
+        return $this;
+    }
+
+    public function setDefaultThemeBag(ThemeBag $defaultThemeBag): static
+    {
+        $this->defaultThemeBag = $defaultThemeBag;
 
         return $this;
     }
@@ -118,14 +126,17 @@ final class InputComponentAction implements ActionInterface
     public function resolveGroup(InputInterface $input): array
     {
         $recipe = $this->getRecipe($input);
+        $defaultGroup =$this->defaultInputGroup ;
+
+        $group = $defaultGroup  ? new $defaultGroup : new DefaultInputGroup;
         
-        $group = new DefaultGroup(
+        $group = $group->inject(
             input: $input, 
             recipe: $this->getRecipe($input),
             themeManager: $this->resolveThemeManager($input),
+            defaultThemeBag: $this->getThemeBag($recipe ),
             value: $this->getValue($input),
             error: $this->getError($input),
-            themeBag: $this->getThemeBag($recipe ),
         );
 
         return $group->getGroup();
@@ -134,19 +145,14 @@ final class InputComponentAction implements ActionInterface
 
     public function getWrapper(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
     {
-        $recipe = $this->getRecipe($input);
-
-        $component = new MainBackendComponent(ComponentEnum::DIV, $this->resolveThemeManager($input));
-        
-        $theme = Support::resolveArrayClosure(
-            value: $recipe->wrapperTheme ?? $this->getThemeBag($recipe)->getWrapperTheme(),
+        $composer = new WrapperComposer(
             input: $input,
-            type: ComponentEnum::DIV
+            recipe: $this->getRecipe($input),
+            themeManager: $this->resolveThemeManager($input),
+            defaultWrapperTheme: $this->defaultThemeBag->getWrapperTheme()
         );
 
-        $component->setThemes($theme);
-
-        return $component;
+        return $composer->build();
     }
 
     public function getRecipe(InputInterface $input) : InputComponentRecipe
@@ -190,13 +196,13 @@ final class InputComponentAction implements ActionInterface
 
     public function resolveThemeManager(InputInterface $input): ThemeManager
     {
-        return $this->getRecipe($input)->themeManager ?? $this->defaultThemeManager ?? new LocalThemeManager;
+        return $this->getRecipe($input)->defaultThemeManager ?? $this->defaultThemeManager ?? new LocalThemeManager;
 
     }
 
     private function getThemeBag(InputComponentRecipe $recipe): ThemeBag
     {
-        return $recipe->themeBag ?? $this->themeBag ?? new DefaultThemeBag();
+        return $recipe->defaultThemeBag ?? $this->defaultThemeBag ?? new DefaultThemeBag();
     }
 
 }
