@@ -3,17 +3,19 @@
 namespace ChatAgency\InputComponentAction\Composers;
 
 use Closure;
+use ChatAgency\InputComponentAction\Bags\DefaultAttributeBag;
+use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
-use ChatAgency\InputComponentAction\Utilities\ThemeUtil;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
-class LabelComposer implements ComponentComposer
+final class LabelComposer implements ComponentComposer
 {
     use isComposer;
 
@@ -30,19 +32,32 @@ class LabelComposer implements ComponentComposer
     {
         $input = $this->input;
         $recipe = $this->recipe;
-        $attributes = $recipe->inputAttributes ?? [];
-
-        $component = new MainBackendComponent(ComponentEnum::LABEL, $this->themeManager);
 
         $type = $this->resolveInputType($recipe);
         
-        $label = $recipe->label ?? $input->getLabel();
-        $for = $attributes['for'] ?? $input->getName();
-
-        $themes = ThemeUtil::resolveTheme($recipe->inputTheme ?? $this->defaultLabelTheme, $type);
+        $attributeBag = $recipe->attributeBag ?? new DefaultAttributeBag;
+        $callback = $recipe->closureBag ?? new DefaultClosureBag;
         
+        $attributes = Support::resolveArrayClosure(value: $attributeBag->getInputAttributes(), input: $input, type: $type);
+        $themes = Support::resolveArrayClosure(value: $recipe->inputTheme ?? $this->defaultLabelTheme, input: $input, type:$type);
+        $label = $recipe->label ?? $input->getLabel();
+
+        $component = new MainBackendComponent(ComponentEnum::LABEL, $this->themeManager);
+
         $component->setContent($label)
-            ->setAttribute('for', $for);
+            ->setAttribute('for', $input->getName())
+            ->setAttributes($attributes);
+
+        if($themes) {
+            $component->setThemes($themes);
+        }
+
+        $component = $this->resolveComponentClosure(
+            component: $component, 
+            closure: $callback->getLabelClosure(), 
+            input: $input, 
+            type: $type
+        );
 
         return $component;
     }

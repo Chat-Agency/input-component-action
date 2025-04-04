@@ -4,8 +4,8 @@ namespace ChatAgency\InputComponentAction\Groups;
 
 use Closure;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Bags\ThemeBag;
 use ChatAgency\InputComponentAction\Concerns\isInputGroup;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;

@@ -8,7 +8,7 @@ use ChatAgency\BackendComponents\Builders\ComponentBuilder;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 
-class ErrorComposer implements ComponentComposer
+final class ErrorComposer implements ComponentComposer
 {
     use isComposer;
 

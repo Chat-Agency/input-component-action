@@ -11,6 +11,7 @@ use Chatagency\CrudAssistant\Concerns\IsAction;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;;
@@ -109,12 +110,14 @@ final class InputComponentAction implements ActionInterface
         
         $wrapper = $this->getWrapper($input);
         $wrapper->setContents($component);
+        
         return $wrapper;
         
     }
     
     public function resolveGroup(InputInterface $input): array
     {
+        $recipe = $this->getRecipe($input);
         
         $group = new DefaultGroup(
             input: $input, 
@@ -122,7 +125,7 @@ final class InputComponentAction implements ActionInterface
             themeManager: $this->resolveThemeManager($input),
             value: $this->getValue($input),
             error: $this->getError($input),
-            themeBag: $this->getThemeBag(),
+            themeBag: $this->getThemeBag($recipe ),
         );
 
         return $group->getGroup();
@@ -134,13 +137,14 @@ final class InputComponentAction implements ActionInterface
         $recipe = $this->getRecipe($input);
 
         $component = new MainBackendComponent(ComponentEnum::DIV, $this->resolveThemeManager($input));
-
-        $component->setThemes(
-            ThemeUtil::resolveTheme(
-                theme: $recipe->wrapperTheme ?? $this->getThemeBag()->getWrapperTheme(),
-                type: ComponentEnum::DIV
-            )
+        
+        $theme = Support::resolveArrayClosure(
+            value: $recipe->wrapperTheme ?? $this->getThemeBag($recipe)->getWrapperTheme(),
+            input: $input,
+            type: ComponentEnum::DIV
         );
+
+        $component->setThemes($theme);
 
         return $component;
     }
@@ -150,14 +154,38 @@ final class InputComponentAction implements ActionInterface
         return $input->getRecipe($this->getIdentifier()) ?? new InputComponentRecipe();
     }
   
-    public function getValue(InputInterface $inputInterface): ?string
+    public function getValue(InputInterface $input): ?string
     {
-        return null;
+        $name = $input->getName();
+        $recipe = $this->getRecipe($input);
+
+        $recipeValue = $recipe->inputValue;
+        $value = null;
+
+        if(Support::isClosure($recipeValue)) {
+            $value = $recipeValue($input, $this->values);
+        } else {
+            $value = $recipeValue;
+        }
+
+        return $value ?? $this->values[$name] ?? null;
     }
 
-    public function getError(InputInterface $inputInterface): ?string
+    public function getError(InputInterface $input): ?string
     {
-        return null;
+        $name = $input->getName();
+        $recipe = $this->getRecipe($input);
+
+        $recipeError = $recipe->inputError;
+        $error = null;
+
+        if(Support::isClosure($recipeError)) {
+            $error = $recipeError($input, $this->errors);
+        } else {
+            $error = $recipeError;
+        }
+
+        return $error ?? $this->errors[$name] ?? null;
     }
 
     public function resolveThemeManager(InputInterface $input): ThemeManager
@@ -166,9 +194,9 @@ final class InputComponentAction implements ActionInterface
 
     }
 
-    private function getThemeBag(): ThemeBag
+    private function getThemeBag(InputComponentRecipe $recipe): ThemeBag
     {
-        return $this->themeBag ?? new DefaultThemeBag();
+        return $recipe->themeBag ?? $this->themeBag ?? new DefaultThemeBag();
     }
 
 }
