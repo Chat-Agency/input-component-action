@@ -18,7 +18,7 @@
     "require": {
         "php": "^8.2",
         "chat-agency/laravel-backend-component": "@dev",
-        "chatagency/crud-assistant": "@dev",
+        "chatagency/crud-assistant": "0.15.2",
         "illuminate/contracts": "^10.0||^11.0",
         "spatie/laravel-package-tools": "^1.16"
     },
