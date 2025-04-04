@@ -27,6 +27,8 @@ final class InputComponentAction implements ActionInterface
 {
     use IsAction;
 
+    protected $controlsRecursion = true;
+
     private ?ThemeManager $defaultThemeManager = null;
 
     private ?InputGroup $defaultInputGroup = null;
@@ -70,21 +72,6 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function prepare(): static
-    {
-        return $this;
-    }
-
-    public function cleanup(): static
-    {
-        return $this;
-    }
-
-    public function controlsRecursion()
-    {
-        return true;
-    }
-
     public function execute(InputCollection|InputInterface|\IteratorAggregate $input) 
     {
         /**
@@ -126,9 +113,8 @@ final class InputComponentAction implements ActionInterface
     public function resolveGroup(InputInterface $input): array
     {
         $recipe = $this->getRecipe($input);
-        $defaultGroup =$this->defaultInputGroup ;
 
-        $group = $defaultGroup  ? new $defaultGroup : new DefaultInputGroup;
+        $group = $recipe->inputGroup ?? $this->defaultInputGroup ?? new DefaultInputGroup;
         
         $group = $group->inject(
             input: $input, 
@@ -149,7 +135,7 @@ final class InputComponentAction implements ActionInterface
             input: $input,
             recipe: $this->getRecipe($input),
             themeManager: $this->resolveThemeManager($input),
-            defaultWrapperTheme: $this->defaultThemeBag->getWrapperTheme()
+            defaultWrapperTheme: $this->defaultThemeBag->getWrapperTheme(),
         );
 
         return $composer->build();

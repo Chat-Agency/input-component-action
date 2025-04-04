@@ -34,12 +34,13 @@ class WrapperComposer implements ComponentComposer
         $recipe = $this->recipe;
 
         $inputType = $this->resolveInputType($recipe);
+        $componentType = $this->resolveWrapperType($recipe);
 
         $theme = Support::resolveArrayClosure(value: $recipe->inputTheme ?? $this->defaultWrapperTheme, input: $input, type: $inputType);
 
         // $type = $recipe->wrapp
 
-        $component = new MainBackendComponent(ComponentEnum::DIV, $this->themeManager);
+        $component = new MainBackendComponent($componentType, $this->themeManager);
         
         $component->setThemes($theme);
 
