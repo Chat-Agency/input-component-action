@@ -11,7 +11,6 @@ interface InputGroup
 {
     public function inject(
         InputInterface $input,
-        InputComponentRecipe $recipe,
         ThemeManager $themeManager,
         ?ThemeBag $defaultThemeBag = null,
         ?string $value = null,

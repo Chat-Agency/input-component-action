@@ -13,7 +13,9 @@ use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 interface ComponentComposer
 {
-    public  static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string;
+    public static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string;
+
+    public function resolveGroup(InputInterface $input): BackendComponent;
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent;
 

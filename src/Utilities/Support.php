@@ -37,7 +37,6 @@ class Support
         
         $group = $group->inject(
             input: $input, 
-            recipe: $recipe,
             themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
             defaultThemeBag: self::resolveThemeBag($recipe, $defaultThemeBag),
             value: $value,

@@ -12,12 +12,11 @@ use ChatAgency\InputComponentAction\Composers\ErrorComposer;
 use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Composers\LabelComposer;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
-use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
+use ChatAgency\InputComponentAction\Utilities\Support;
 
 trait isInputGroup
 {
     private InputInterface $input;
-    private InputComponentRecipe $recipe;
     private ThemeManager $themeManager;
     private ?ThemeBag $defaultThemeBag = null;
     private ?string $value = null;
@@ -25,7 +24,6 @@ trait isInputGroup
 
     public function inject(
         InputInterface $input,
-        InputComponentRecipe $recipe,
         ThemeManager $themeManager,
         ?ThemeBag $defaultThemeBag = null,
         ?string $value = null,
@@ -33,7 +31,6 @@ trait isInputGroup
     ): static
     {
         $this->input = $input;
-        $this->recipe = $recipe;
         $this->themeManager = $themeManager;
         $this->defaultThemeBag = $defaultThemeBag;
         $this->value = $value;
@@ -44,13 +41,14 @@ trait isInputGroup
     
     private function getWrapperComponent(): BackendComponent|ContentComponent|ThemeComponent|null
     {
-        if($this->recipe->disableWrapper) {
+        $recipe = Support::getRecipe($this->input);
+        
+        if($recipe->disableWrapper) {
             return null;
         }
         
         $composer = new WrapperComposer(
             input: $this->input,
-            recipe: $this->recipe,
             themeManager:$this->themeManager,
             defaultWrapperTheme: $this?->defaultThemeBag->getWrapperTheme(),
         );
@@ -60,13 +58,14 @@ trait isInputGroup
 
     private function getLabelComponent(): BackendComponent|ContentComponent|ThemeComponent|null
     {
-        if($this->recipe->disableLabel) {
+        $recipe = Support::getRecipe($this->input);
+        
+        if($recipe->disableLabel) {
             return null;
         }
         
         $composer = new LabelComposer(
             input: $this->input,  
-            recipe: $this->recipe,
             themeManager: $this->themeManager,
             defaultLabelTheme: $this?->defaultThemeBag->getLabelTheme(),
         );
@@ -80,7 +79,6 @@ trait isInputGroup
         
         $composer = new InputComposer(
             input: $this->input, 
-            recipe: $this->recipe,
             themeManager: $this->themeManager,
             value: $this->value,
             defaultInputTheme: $this?->defaultThemeBag->getInputTheme(),
@@ -92,7 +90,9 @@ trait isInputGroup
     
     private function getErrorComponent(): BackendComponent|ContentComponent|ThemeComponent|null
     {
-        if($this->recipe->disableError) {
+        $recipe = Support::getRecipe($this->input);
+        
+        if($recipe->disableError) {
             return null;
         }
         

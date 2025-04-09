@@ -22,7 +22,6 @@ class WrapperComposer implements ComponentComposer
 
     public function __construct(
         private InputInterface $input,
-        private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
         private array|Closure|null $defaultWrapperTheme = [],
     ) 
@@ -32,7 +31,7 @@ class WrapperComposer implements ComponentComposer
     public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
         $input = $this->input;
-        $recipe = $this->recipe;
+        $recipe = Support::getRecipe($input);
 
         $inputType = $this->resolveInputType($recipe);
         $componentType = $this->resolveWrapperType($recipe);

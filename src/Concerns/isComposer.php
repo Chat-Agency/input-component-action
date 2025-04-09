@@ -7,11 +7,32 @@ use BackedEnum;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 trait isComposer
 {
+    
+    public function resolveGroup(InputInterface $input): BackendComponent
+    {
+        $recipe = Support::getRecipe($input);
+        
+        $group = $recipe->inputGroup ?? $this->defaultInputGroup ?? new DefaultInputGroup;
+        
+        $group = $group->inject(
+            input: $input,
+            themeManager: $this->themeManager,
+            defaultThemeBag: new DefaultThemeBag,
+            value: $this->value,
+            error: $this->error,
+        );
+
+        return $group->getGroup();
+
+    }   
+    
     public static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string
     {
         return (!is_null($recipe->inputValue)) ? $recipe->inputValue : $value;
