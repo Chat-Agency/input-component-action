@@ -40,28 +40,50 @@ final class InputComposer implements ComponentComposer
     public function buildInputComponent(InputInterface|string $input, InputComponentRecipe $recipe): BackendComponent|ContentComponent
     {
         $inputType = $this->resolveInputType($recipe);
-
+        
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
         $callback = $recipe->closureBag ?? new DefaultClosureBag;
         $value = $this->resolveInputValue($recipe, $this->value);
+        $name = $this->resolveInputName($input);
+        $id = $this->resolveInputId($input);
+
+
+        $selected = $name === $value;
         
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
         
         $component = new MainBackendComponent($inputType, $this->themeManager);
 
-        $component->setAttribute('value', $value);
+        /**
+         * Set value or 
+         * selected state
+         */
+        if($recipe->ckeckable && $selected) {
+            $component->setAttribute('checked', $selected);
+        } elseif($recipe->selectable && $selected) {
+            $component->setAttribute('selected', $selected);
+        } elseif(!is_null($value)) {
+            $component->setAttribute('value', $value);
+        }
 
+        /**
+         * Default attributes
+         */
         if(!$recipe->disableInputDefaultAttributes) {
-            $component->setAttribute('name', $input->getName())
-                ->setAttribute('id', $input->getName());
+            $component->setAttribute('name', $name)
+                ->setAttribute('id', $id);
         }
         
+        /**
+         * Set/overwrite attributes
+         */
         if($attributes) {
             $component->setAttributes($attributes);
         }
 
+        
         if($theme) {
             $component->setThemes($theme);
         }

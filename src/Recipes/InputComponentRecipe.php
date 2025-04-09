@@ -47,6 +47,9 @@ final class InputComponentRecipe implements RecipeInterface
          * id to the input by default
         */
         public readonly bool $disableInputDefaultAttributes = false,
+
+        public readonly bool $ckeckable = false,
+        public readonly bool $selectable = false,
     )
     {
     }

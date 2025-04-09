@@ -12,10 +12,27 @@ use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 trait isComposer
 {
-    public  static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string
+    public static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string
     {
         return (!is_null($recipe->inputValue)) ? $recipe->inputValue : $value;
     }
+    
+    public static function resolveInputName(InputInterface $input, ?array $attributes = null) : ?string
+    {
+        $recipe = Support::getRecipe($input);
+        $attributes ??= $recipe?->attributeBag?->getInputAttributes() ?? null;
+
+        return $attributes['name'] ?? $input->getName();
+    }
+    
+    public static function resolveInputId(InputInterface $input, ?array $attributes = null) : ?string
+    {
+        $recipe = Support::getRecipe($input);
+        $attributes ??= $recipe?->attributeBag?->getInputAttributes() ?? null;
+
+        return $attributes['id'] ?? $input->getName();
+    }
+
     public function resolveWrapperType(?InputComponentRecipe $recipe) : string|ComponentEnum
     {
         return $recipe->wrapperType ?? ComponentEnum::DIV;
