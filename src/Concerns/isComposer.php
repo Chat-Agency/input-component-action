@@ -14,7 +14,7 @@ trait isComposer
 {
     public  static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string
     {
-        return $recipe->inputValue ?? $value;
+        return (!is_null($recipe->inputValue)) ? $recipe->inputValue : $value;
     }
     public function resolveWrapperType(?InputComponentRecipe $recipe) : string|ComponentEnum
     {

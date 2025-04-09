@@ -41,6 +41,12 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $disableWrapper = false,
         public readonly bool $disableLabel = false,
         public readonly bool $disableError = false,
+
+        /** 
+         * Disables adding the name and 
+         * id to the input by default
+        */
+        public readonly bool $disableInputDefaultAttributes = false,
     )
     {
     }

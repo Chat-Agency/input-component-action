@@ -6,7 +6,6 @@ use Closure;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
@@ -15,7 +14,6 @@ use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\InputComponentAction\Bags\DefaultAttributeBag;
 use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -53,10 +51,13 @@ final class InputComposer implements ComponentComposer
         
         $component = new MainBackendComponent($inputType, $this->themeManager);
 
-        $component->setAttribute('name', $input->getName())
-            ->setAttribute('id', $input->getName())
-            ->setAttribute('value', $value);
+        $component->setAttribute('value', $value);
 
+        if(!$recipe->disableInputDefaultAttributes) {
+            $component->setAttribute('name', $input->getName())
+                ->setAttribute('id', $input->getName());
+        }
+        
         if($attributes) {
             $component->setAttributes($attributes);
         }
