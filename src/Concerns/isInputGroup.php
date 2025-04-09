@@ -11,6 +11,7 @@ use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Composers\ErrorComposer;
 use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Composers\LabelComposer;
+use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 trait isInputGroup
@@ -41,13 +42,33 @@ trait isInputGroup
         return $this;
     }
     
-    private function getLabelComponent(): BackendComponent|ContentComponent|ThemeComponent
+    private function getWrapperComponent(): BackendComponent|ContentComponent|ThemeComponent|null
     {
+        if($this->recipe->disableWrapper) {
+            return null;
+        }
+        
+        $composer = new WrapperComposer(
+            input: $this->input,
+            recipe: $this->recipe,
+            themeManager:$this->themeManager,
+            defaultWrapperTheme: $this?->defaultThemeBag->getWrapperTheme(),
+        );
+
+        return $composer->build();
+    }
+
+    private function getLabelComponent(): BackendComponent|ContentComponent|ThemeComponent|null
+    {
+        if($this->recipe->disableLabel) {
+            return null;
+        }
+        
         $composer = new LabelComposer(
             input: $this->input,  
             recipe: $this->recipe,
             themeManager: $this->themeManager,
-            defaultLabelTheme: $this->defaultThemeBag->getLabelTheme(),
+            defaultLabelTheme: $this?->defaultThemeBag->getLabelTheme(),
         );
 
         return $composer->build();
@@ -56,23 +77,29 @@ trait isInputGroup
 
     private function getInputComponent(): BackendComponent|ContentComponent|ThemeComponent
     {
+        
         $composer = new InputComposer(
             input: $this->input, 
             recipe: $this->recipe,
             themeManager: $this->themeManager,
             value: $this->value,
-            defaultInputTheme: $this->defaultThemeBag->getInputTheme(),
+            defaultInputTheme: $this?->defaultThemeBag->getInputTheme(),
         );
 
         return $composer->build();
     }
 
     
-    private function getErrorComponent(): BackendComponent|ContentComponent|ThemeComponent
+    private function getErrorComponent(): BackendComponent|ContentComponent|ThemeComponent|null
     {
+        if($this->recipe->disableError) {
+            return null;
+        }
+        
         $error = new ErrorComposer();
 
         return $error->build();
     }
+
 
 }

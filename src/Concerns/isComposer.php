@@ -12,6 +12,10 @@ use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 trait isComposer
 {
+    public  static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string
+    {
+        return $recipe->inputValue ?? $value;
+    }
     public function resolveWrapperType(?InputComponentRecipe $recipe) : string|ComponentEnum
     {
         return $recipe->wrapperType ?? ComponentEnum::DIV;

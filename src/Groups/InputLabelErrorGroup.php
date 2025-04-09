@@ -13,13 +13,24 @@ final class InputLabelErrorGroup implements InputGroup
     /**
      * @return BackendComponent[]
      */
-    public function getGroup(): array
+    public function getGroup(): BackendComponent
     {
-        return [
-            $this->getInputComponent(),
-            $this->getLabelComponent(),
-            $this->getErrorComponent(),
-        ];
+        $components =  [];
+        $recipe = $this->recipe;
+
+        $components[] = $this->getInputComponent();
+
+        if(!$recipe->disableLabel) {
+            $components[] = $this->getLabelComponent();
+        }
+        
+        if(!$recipe->disableError) {
+            $components[] = $this->getErrorComponent();
+        }
+
+        $wrapper = $this->getErrorComponent();
+
+        return $wrapper->setContents($components);
     }
 
 }

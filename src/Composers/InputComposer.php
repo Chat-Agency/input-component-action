@@ -6,14 +6,17 @@ use Closure;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
+use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Bags\DefaultAttributeBag;
+use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
@@ -26,7 +29,7 @@ final class InputComposer implements ComponentComposer
         private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
         private ?string $value = null,
-        private array|Closure $defaultInputTheme = [],
+        private array|Closure|null $defaultInputTheme = [],
     ) 
     {
     }
@@ -38,32 +41,35 @@ final class InputComposer implements ComponentComposer
 
     public function buildInputComponent(InputInterface|string $input, InputComponentRecipe $recipe): BackendComponent|ContentComponent
     {
-        $type = $this->resolveInputType($recipe);
+        $inputType = $this->resolveInputType($recipe);
 
-        $theme = $recipe->inputTheme ?? $this->defaultInputTheme;
-        $attributeBag = $recipe->attributeBag ?? new DefaultAttributeBag;
+        $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
+        $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
         $callback = $recipe->closureBag ?? new DefaultClosureBag;
+        $value = $this->resolveInputValue($recipe, $this->value);
         
-        $attributes = Support::resolveArrayClosure(value: $attributeBag->getInputAttributes(), input: $input, type: $type);
-        $themes = Support::resolveArrayClosure($theme, input: $input, type: $type);
+        $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
+        $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
         
-        $component = new MainBackendComponent($type, $this->themeManager);
+        $component = new MainBackendComponent($inputType, $this->themeManager);
 
         $component->setAttribute('name', $input->getName())
             ->setAttribute('id', $input->getName())
-            ->setAttribute('type', $type->value)
-            ->setAttribute('value', $this->value)
-            ->setAttributes($attributes);
+            ->setAttribute('value', $value);
+
+        if($attributes) {
+            $component->setAttributes($attributes);
+        }
+
+        if($theme) {
+            $component->setThemes($theme);
+        }
 
         if($recipe->labelAsInputContent) {
             $component->setContent($input->getLabel());
         }
 
-        if($themes) {
-            $component->setThemes($themes);
-        }
-
-        $subComponents = $this->buildInputSubComponents($input);
+        $subComponents = $this->buildInputSubComponents();
 
         if($subComponents) {
             $component->setContents($subComponents);
@@ -73,15 +79,17 @@ final class InputComposer implements ComponentComposer
             component: $component, 
             closure: $callback->getLabelClosure(), 
             input: $input, 
-            type: $type
+            type: $inputType
         );
 
         return $component;
     }
 
     
-    public function buildInputSubComponents(InputInterface $input): ?array
+    public function buildInputSubComponents(): ?array
     {
+        $input = $this->input;
+
         $subElements = $input->getSubElements();
         $components = [];
 
@@ -90,11 +98,27 @@ final class InputComposer implements ComponentComposer
         }
         
         foreach ($subElements as $element) {
-            $elementRecipe = $element->getRecipe(InputComponentAction::getIdentifier()) ?? new InputComponentRecipe;
-            $components[] = $this->buildInputComponent($element, $elementRecipe);
+            $components[] = $this->resolveGroup($element);
         }
 
         return $components;
     }
+
+    public function resolveGroup(InputInterface $input): BackendComponent
+    {
+        $recipe = $input->getRecipe(InputComponentAction::getIdentifier());
+        
+        $group = $recipe->inputGroup ?? $this->defaultInputGroup ?? new DefaultInputGroup;
+        
+        $group = $group->inject(
+            input: $input, 
+            recipe: $recipe,
+            themeManager: $this->themeManager,
+            defaultThemeBag: new DefaultThemeBag,
+        );
+
+        return $group->getGroup();
+
+    }   
 
 }

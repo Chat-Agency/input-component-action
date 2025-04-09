@@ -14,11 +14,11 @@ interface ThemeBag
 
     public function setErrorTheme(Closure|array $errorTheme): static;
 
-    public function getWrapperTheme(): Closure|array;
+    public function getWrapperTheme(): Closure|array|null;
 
-    public function getInputTheme(): Closure|array;
+    public function getInputTheme(): Closure|array|null;
     
-    public function getLabelTheme(): Closure|array;
+    public function getLabelTheme(): Closure|array|null;
 
-    public function getErrorTheme(): Closure|array;
+    public function getErrorTheme(): Closure|array|null;
 }

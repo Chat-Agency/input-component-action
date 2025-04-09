@@ -6,13 +6,13 @@ use Closure;
 
 trait isThemeBag
 {
-    private Closure|array $wrapperTheme = [];
+    private Closure|array|null $wrapperTheme = null;
 
-    private Closure|array $inputTheme = [];
+    private Closure|array|null $inputTheme = null;
     
-    private Closure|array $labelTheme = [];
+    private Closure|array|null $labelTheme = null;
 
-    private Closure|array $errorTheme = [];
+    private Closure|array|null $errorTheme = null;
 
     public function setWrapperTheme(Closure|array $wrapperTheme): static
     {
@@ -41,22 +41,22 @@ trait isThemeBag
 
         return $this;
     }
-    public function getWrapperTheme(): Closure|array
+    public function getWrapperTheme(): Closure|array|null
     {
         return $this->wrapperTheme;
     }
 
-    public function getInputTheme(): Closure|array
+    public function getInputTheme(): Closure|array|null
     {
         return $this->inputTheme;
     }
 
-    public function getLabelTheme(): Closure|array
+    public function getLabelTheme(): Closure|array|null
     {
         return $this->labelTheme;
     }
 
-    public function getErrorTheme(): Closure|array
+    public function getErrorTheme(): Closure|array|null
     {
         return $this->errorTheme;
     }

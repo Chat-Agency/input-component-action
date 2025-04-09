@@ -2,7 +2,6 @@
 
 namespace ChatAgency\InputComponentAction\Composers;
 
-use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use Closure;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\MainBackendComponent;
@@ -11,8 +10,10 @@ use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 class WrapperComposer implements ComponentComposer
@@ -23,7 +24,7 @@ class WrapperComposer implements ComponentComposer
         private InputInterface $input,
         private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
-        private array|Closure $defaultWrapperTheme,
+        private array|Closure|null $defaultWrapperTheme = [],
     ) 
     {
     }
@@ -36,13 +37,29 @@ class WrapperComposer implements ComponentComposer
         $inputType = $this->resolveInputType($recipe);
         $componentType = $this->resolveWrapperType($recipe);
 
-        $theme = Support::resolveArrayClosure(value: $recipe->inputTheme ?? $this->defaultWrapperTheme, input: $input, type: $inputType);
-
-        // $type = $recipe->wrapp
+        $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
+        $theme = $recipe->themeBag?->getWrapperTheme() ?? $this->defaultWrapperTheme;
+        $callback = $recipe->closureBag ?? new DefaultClosureBag;
+        
+        $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
+        $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
 
         $component = new MainBackendComponent($componentType, $this->themeManager);
         
-        $component->setThemes($theme);
+        if($theme) {
+            $component->setThemes($theme);
+        }
+
+        if($recipe->labelAsInputContent) {
+            $component->setContent($input->getLabel());
+        }
+
+        $component = $this->resolveComponentClosure(
+            component: $component, 
+            closure: $callback->getWrapperClosure(), 
+            input: $input, 
+            type: $inputType
+        );
 
         return $component;
     }

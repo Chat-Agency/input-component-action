@@ -25,7 +25,7 @@ final class LabelComposer implements ComponentComposer
         private InputInterface $input,
         private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
-        private array|Closure $defaultLabelTheme,
+        private array|Closure|null $defaultLabelTheme = [],
     ) 
     {
     }
@@ -38,19 +38,23 @@ final class LabelComposer implements ComponentComposer
         $inputType = $this->resolveInputType($recipe);
         $componentType = $this->resolveLabelType($recipe);
         
-        $attributeBag = $recipe->attributeBag ?? new DefaultAttributeBag;
+        $attributes = $recipe->attributeBag?->getLabelAttributes() ?? null;
         $callback = $recipe->closureBag ?? new DefaultClosureBag;
+        $theme = $recipe->themeBag?->getLabelTheme() ?? $this->defaultLabelTheme;
         
-        $attributes = Support::resolveArrayClosure(value: $attributeBag->getInputAttributes(), input: $input, type: $inputType);
-        $themes = Support::resolveArrayClosure(value: $recipe->inputTheme ?? $this->defaultLabelTheme, input: $input, type:$inputType);
+        $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
+        $themes = Support::resolveArrayClosure(value: $theme ?? $this->defaultLabelTheme, input: $input, type:$inputType);
         $label = $recipe->label ?? $input->getLabel();
 
         $component = new MainBackendComponent($componentType, $this->themeManager);
 
         $component->setContent($label)
-            ->setAttribute('for', $input->getName())
-            ->setAttributes($attributes);
+            ->setAttribute('for', $input->getName());
 
+        if($attributes) {
+            $component->setAttributes($attributes);
+        }
+    
         if($themes) {
             $component->setThemes($themes);
         }

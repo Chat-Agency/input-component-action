@@ -13,15 +13,11 @@ use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\ActionInterface;;
-use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
-use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class InputComponentAction implements ActionInterface 
 {
@@ -78,8 +74,10 @@ final class InputComponentAction implements ActionInterface
          * @var DataContainer<InputInterface> $inputs
          */
         $inputs = $this->output->inputs;
-       
-        $inputs->set($input->getName(), $this->resolveInputs($input));
+
+        $name = Support::getName($input);
+        
+        $inputs->set($name, $this->resolveInputs($input));
 
         return $this->output;
     }
@@ -91,7 +89,6 @@ final class InputComponentAction implements ActionInterface
          * and input collections.
          */
         if (CrudAssistant::isInputCollection($input) && $this->controlsRecursion()) {
-            
             $wrapper = $this->getWrapper($input);
             
             foreach ($input as $item) {
@@ -103,53 +100,47 @@ final class InputComponentAction implements ActionInterface
         
         $component = $this->resolveGroup($input);
         
-        $wrapper = $this->getWrapper($input);
-        $wrapper->setContents($component);
         
-        return $wrapper;
+        return $component;
         
     }
     
-    public function resolveGroup(InputInterface $input): array
+    public function resolveGroup(InputInterface $input): BackendComponent
     {
-        $recipe = $this->getRecipe($input);
+        $recipe = Support::getRecipe($input);
 
-        $group = $recipe->inputGroup ?? $this->defaultInputGroup ?? new DefaultInputGroup;
-        
-        $group = $group->inject(
+
+        return Support::resolveGroup(
             input: $input, 
-            recipe: $this->getRecipe($input),
-            themeManager: $this->resolveThemeManager($input),
-            defaultThemeBag: $this->getThemeBag($recipe ),
+            defaultInputGroup: $this->defaultInputGroup, 
+            defaultThemeManager: $this->defaultThemeManager, 
+            defaultThemeBag: $this->defaultThemeBag,
             value: $this->getValue($input),
             error: $this->getError($input),
+
         );
 
-        return $group->getGroup();
-
-    }
+    }   
 
     public function getWrapper(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
     {
+        $recipe = Support::getRecipe($input);
+        
         $composer = new WrapperComposer(
             input: $input,
-            recipe: $this->getRecipe($input),
-            themeManager: $this->resolveThemeManager($input),
+            recipe: Support::getRecipe($input),
+            themeManager: Support::resolveThemeManager($recipe, $this->defaultThemeManager),
             defaultWrapperTheme: $this->defaultThemeBag->getWrapperTheme(),
         );
 
         return $composer->build();
     }
 
-    public function getRecipe(InputInterface $input) : InputComponentRecipe
-    {
-        return $input->getRecipe($this->getIdentifier()) ?? new InputComponentRecipe();
-    }
   
     public function getValue(InputInterface $input): ?string
     {
         $name = $input->getName();
-        $recipe = $this->getRecipe($input);
+        $recipe = Support::getRecipe($input);
 
         $recipeValue = $recipe->inputValue;
         $value = null;
@@ -166,7 +157,7 @@ final class InputComponentAction implements ActionInterface
     public function getError(InputInterface $input): ?string
     {
         $name = $input->getName();
-        $recipe = $this->getRecipe($input);
+        $recipe = Support::getRecipe($input);
 
         $recipeError = $recipe->inputError;
         $error = null;
@@ -178,17 +169,6 @@ final class InputComponentAction implements ActionInterface
         }
 
         return $error ?? $this->errors[$name] ?? null;
-    }
-
-    public function resolveThemeManager(InputInterface $input): ThemeManager
-    {
-        return $this->getRecipe($input)->defaultThemeManager ?? $this->defaultThemeManager ?? new LocalThemeManager;
-
-    }
-
-    private function getThemeBag(InputComponentRecipe $recipe): ThemeBag
-    {
-        return $recipe->defaultThemeBag ?? $this->defaultThemeBag ?? new DefaultThemeBag();
     }
 
 }

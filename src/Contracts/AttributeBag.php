@@ -14,11 +14,11 @@ interface AttributeBag
 
     public function setErrorAttributes(Closure|array $errorAttributes): static;
     
-    public function getWrapperAttributes(): Closure|array;
+    public function getWrapperAttributes(): Closure|array|null;
 
-    public function getInputAttributes(): Closure|array;
+    public function getInputAttributes(): Closure|array|null;
     
-    public function getLabelAttributes(): Closure|array;
+    public function getLabelAttributes(): Closure|array|null;
 
-    public function getErrorAttributes(): Closure|array;
+    public function getErrorAttributes(): Closure|array|null;
 }

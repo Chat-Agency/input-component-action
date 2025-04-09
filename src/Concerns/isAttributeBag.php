@@ -6,13 +6,13 @@ use Closure;
 
 trait isAttributeBag
 {
-    private Closure|array $wrapperAttributes = [];
+    private Closure|array|null $wrapperAttributes = null;
 
-    private Closure|array $inputAttributes = [];
+    private Closure|array|null $inputAttributes = null;
     
-    private Closure|array $labelAttributes = [];
+    private Closure|array|null $labelAttributes = null;
 
-    private Closure|array $errorAttributes = [];
+    private Closure|array|null $errorAttributes = null;
 
     public function setWrapperAttributes(Closure|array $wrapperAttributes): static
     {
@@ -41,22 +41,22 @@ trait isAttributeBag
 
         return $this;
     }
-    public function getWrapperAttributes(): Closure|array
+    public function getWrapperAttributes(): Closure|array|null
     {
         return $this->wrapperAttributes;
     }
 
-    public function getInputAttributes(): Closure|array
+    public function getInputAttributes(): Closure|array|null
     {
         return $this->inputAttributes;
     }
 
-    public function getLabelAttributes(): Closure|array
+    public function getLabelAttributes(): Closure|array|null
     {
         return $this->labelAttributes;
     }
 
-    public function getErrorAttributes(): Closure|array
+    public function getErrorAttributes(): Closure|array|null
     {
         return $this->errorAttributes;
     }

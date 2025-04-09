@@ -13,6 +13,8 @@ use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 interface ComponentComposer
 {
+    public  static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string;
+
     public function build(): BackendComponent|ContentComponent|ThemeComponent;
 
     public function resolveWrapperType(?InputComponentRecipe $recipe) : string|ComponentEnum;

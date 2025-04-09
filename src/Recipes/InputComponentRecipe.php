@@ -37,6 +37,10 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly ?AttributeBag $attributeBag = null,
         public readonly ?ThemeBag $themeBag = null,
         public readonly ?ClosureBag $closureBag = null,
+
+        public readonly bool $disableWrapper = false,
+        public readonly bool $disableLabel = false,
+        public readonly bool $disableError = false,
     )
     {
     }
