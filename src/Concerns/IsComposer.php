@@ -1,0 +1,81 @@
+<?php
+
+namespace ChatAgency\InputComponentAction\Concerns;
+
+use Closure;
+use BackedEnum;
+use ChatAgency\BackendComponents\Enums\ComponentEnum;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
+
+trait IsComposer
+{
+    
+    public function resolveGroup(InputInterface $input): BackendComponent
+    {
+        return Support::initGroup(
+            input: $input, 
+            defaultThemeManager: $this->themeManager, 
+            defaultInputGroup: null, 
+            defaultThemeBag: null,
+            value: $this->value,
+            error: $this->error,
+        );
+        
+    }   
+    
+    public static function resolveInputValue(InputInterface $input, ?string $value = null) : ?string
+    {
+        $recipe = Support::getRecipe($input);
+        return (!is_null($recipe->inputValue)) ? $recipe->inputValue : $value;
+    }
+    
+    public static function resolveInputName(InputInterface $input, ?array $attributes = null) : ?string
+    {
+        $recipe = Support::getRecipe($input);
+        $attributes ??= $recipe?->attributeBag?->getInputAttributes() ?? null;
+
+        return $attributes['name'] ?? $input->getName();
+    }
+    
+    public static function resolveInputId(InputInterface $input, ?array $attributes = null) : ?string
+    {
+        $recipe = Support::getRecipe($input);
+        $attributes ??= $recipe?->attributeBag?->getInputAttributes() ?? null;
+
+        return $attributes['id'] ?? $input->getName();
+    }
+
+    public function resolveWrapperType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    {
+        return $recipe->wrapperType ?? ComponentEnum::DIV;
+    }
+    public function resolveLabelType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    {
+        return $recipe->labelType ?? ComponentEnum::LABEL;
+    }
+
+    public function resolveInputType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    {
+        return $recipe->inputType ?? ComponentEnum::TEXT_INPUT;
+    }
+
+    public function resolveErrorType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    {
+        return $recipe->errorType ?? ComponentEnum::DIV;
+    }
+
+    public function resolveComponentClosure(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent
+    {
+        if(Support::isClosure($closure)) {
+            /** @var array $closure */
+            return $closure($component, $input, $type);
+        }
+
+        return $component;
+    }
+
+}
