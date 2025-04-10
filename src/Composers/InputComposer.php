@@ -11,6 +11,7 @@ use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use Chatagency\CrudAssistant\Contracts\InputCollectionInterface;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 
 final class InputComposer implements ComponentComposer
@@ -32,7 +33,7 @@ final class InputComposer implements ComponentComposer
        return $this->buildInputComponent($this->input);
     }
 
-    public function buildInputComponent(InputInterface|string $input): BackendComponent|ContentComponent
+    public function buildInputComponent(InputInterface|InputCollectionInterface $input): BackendComponent|ContentComponent
     {
         
         $recipe = Support::getRecipe($input);
@@ -137,7 +138,7 @@ final class InputComposer implements ComponentComposer
             return null;
         }
         
-        foreach ($subElements as $element) {
+        foreach ($subElements->getInputs() as $element) {
             $components[] = $this->resolveGroup($element);
         }
 

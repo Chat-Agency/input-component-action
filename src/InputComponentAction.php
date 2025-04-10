@@ -92,7 +92,7 @@ final class InputComponentAction implements ActionInterface
         if (CrudAssistant::isInputCollection($input) && $this->controlsRecursion()) {
             $wrapper = $this->getWrapper($input);
             
-            foreach ($input as $item) {
+            foreach ($input->getInputs() as $item) {
                 $wrapper->setContent($this->resolveInputs($item));
             }
 

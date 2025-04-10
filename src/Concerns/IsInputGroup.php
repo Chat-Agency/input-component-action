@@ -100,7 +100,13 @@ trait IsInputGroup
             return null;
         }
         
-        $error = new ErrorComposer();
+        $error = new ErrorComposer(
+            input: $this->input,  
+            themeManager: $this->themeManager,
+            defaultInputTheme: $this->defaultThemeBag?->getLabelTheme(),
+            value: $this->value,
+            error: $this->error,
+        );
 
         return $error->build();
     }
