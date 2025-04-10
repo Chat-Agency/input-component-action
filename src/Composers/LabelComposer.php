@@ -25,6 +25,8 @@ final class LabelComposer implements ComponentComposer
         private InputInterface $input,
         private ThemeManager $themeManager,
         private array|Closure|null $defaultLabelTheme = [],
+        private ?string $value = null,
+        private ?string $error = null,
     ) 
     {
     }

@@ -24,6 +24,8 @@ class WrapperComposer implements ComponentComposer
         private InputInterface $input,
         private ThemeManager $themeManager,
         private array|Closure|null $defaultWrapperTheme = [],
+        private ?string $value = null,
+        private ?string $error = null,
     ) 
     {
     }

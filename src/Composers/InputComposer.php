@@ -9,11 +9,9 @@ use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Concerns\isComposer;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class InputComposer implements ComponentComposer
 {
@@ -22,8 +20,9 @@ final class InputComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private ThemeManager $themeManager,
-        private ?string $value = null,
         private array|Closure|null $defaultInputTheme = [],
+        private ?string $value = null,
+        private ?string $error = null,
     ) 
     {
     }

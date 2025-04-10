@@ -51,6 +51,8 @@ trait isInputGroup
             input: $this->input,
             themeManager:$this->themeManager,
             defaultWrapperTheme: $this?->defaultThemeBag->getWrapperTheme(),
+            value: $this->value,
+            error: $this->error,
         );
 
         return $composer->build();
@@ -68,6 +70,8 @@ trait isInputGroup
             input: $this->input,  
             themeManager: $this->themeManager,
             defaultLabelTheme: $this?->defaultThemeBag->getLabelTheme(),
+            value: $this->value,
+            error: $this->error,
         );
 
         return $composer->build();
@@ -82,6 +86,8 @@ trait isInputGroup
             themeManager: $this->themeManager,
             value: $this->value,
             defaultInputTheme: $this?->defaultThemeBag->getInputTheme(),
+            value: $this->value,
+            error: $this->error,
         );
 
         return $composer->build();
