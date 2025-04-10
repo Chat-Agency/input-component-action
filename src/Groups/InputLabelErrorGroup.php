@@ -3,33 +3,33 @@
 namespace ChatAgency\InputComponentAction\Groups;
 
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\InputComponentAction\Concerns\isInputGroup;
+use ChatAgency\InputComponentAction\Concerns\IsInputGroup;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class InputLabelErrorGroup implements InputGroup
 {
-    use isInputGroup;
+    use IsInputGroup;
 
-    /**
-     * @return BackendComponent[]
-     */
-    public function getGroup(): BackendComponent
+    public function getGroup(): BackendComponent|ContentComponent
     {
-        $components =  [];
-        $recipe = Support::getRecipe($this->input);
+        $wrapper = $this->getWrapperComponent() ?? Support::getCollectionWrapper();
+        $label = $this->getLabelComponent();
+        $input = $this->getInputComponent();
+        $error = $this->getErrorComponent();
 
-        $components[] = $this->getInputComponent();
+        $components = [];
 
-        if(!$recipe->disableLabel) {
-            $components[] = $this->getLabelComponent();
+        $components[] = $input;
+
+        if($label) {
+            $components[] = $label;
         }
         
-        if(!$recipe->disableError) {
-            $components[] = $this->getErrorComponent();
+        if($error ) {
+            $components[] = $error ;
         }
-
-        $wrapper = $this->getErrorComponent();
 
         return $wrapper->setContents($components);
     }

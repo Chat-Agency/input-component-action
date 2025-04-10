@@ -50,7 +50,7 @@ trait IsInputGroup
         $composer = new WrapperComposer(
             input: $this->input,
             themeManager:$this->themeManager,
-            defaultWrapperTheme: $this?->defaultThemeBag->getWrapperTheme(),
+            defaultWrapperTheme: $this->defaultThemeBag?->getWrapperTheme(),
             value: $this->value,
             error: $this->error,
         );
@@ -69,7 +69,7 @@ trait IsInputGroup
         $composer = new LabelComposer(
             input: $this->input,  
             themeManager: $this->themeManager,
-            defaultLabelTheme: $this?->defaultThemeBag->getLabelTheme(),
+            defaultLabelTheme: $this->defaultThemeBag?->getLabelTheme(),
             value: $this->value,
             error: $this->error,
         );
@@ -83,7 +83,7 @@ trait IsInputGroup
         $composer = new InputComposer(
             input: $this->input, 
             themeManager: $this->themeManager,
-            defaultInputTheme: $this?->defaultThemeBag->getInputTheme(),
+            defaultInputTheme: $this->defaultThemeBag?->getInputTheme(),
             value: $this->value,
             error: $this->error,
         );

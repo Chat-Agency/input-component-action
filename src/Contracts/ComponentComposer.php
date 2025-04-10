@@ -13,7 +13,7 @@ use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 interface ComponentComposer
 {
-    public static function resolveInputValue(InputComponentRecipe $recipe, ?string $value = null) : ?string;
+    public static function resolveInputValue(InputInterface $input, ?string $value = null) : ?string;
 
     public function resolveGroup(InputInterface $input): BackendComponent;
 
@@ -27,5 +27,5 @@ interface ComponentComposer
 
     public function resolveErrorType(?InputComponentRecipe $recipe) : string|ComponentEnum;
 
-    public function resolveComponentClosure(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent;
+    public function resolveComponentClosure(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent|ThemeComponent;
 }

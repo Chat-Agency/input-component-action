@@ -3,7 +3,7 @@
 namespace ChatAgency\InputComponentAction\Recipes;
 
 use Closure;
-use Chatagency\CrudAssistant\Concerns\isRecipe;
+use Chatagency\CrudAssistant\Concerns\IsRecipe;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
@@ -15,9 +15,10 @@ use ChatAgency\InputComponentAction\InputComponentAction;
 
 final class InputComponentRecipe implements RecipeInterface
 {
-    use isRecipe;
+    use IsRecipe;
 
-    private $action = InputComponentAction::class;
+    /** @var class-string $action */
+    protected $action = InputComponentAction::class;
 
     public function __construct(
         public readonly string|Closure|null $inputValue = null,
@@ -46,10 +47,13 @@ final class InputComponentRecipe implements RecipeInterface
          * Disables adding the name and 
          * id to the input by default
         */
-        public readonly bool $disableInputDefaultAttributes = false,
+        public readonly bool $disableDefaultNameAttribute = false,
+        public readonly bool $disableDefaultIdAttribute = false,
 
         public readonly bool $ckeckable = false,
         public readonly bool $selectable = false,
+
+        public readonly bool $isInputGroup = false,
     )
     {
     }

@@ -5,7 +5,7 @@ namespace ChatAgency\InputComponentAction\Contracts;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
 
 interface InputGroup
 {
@@ -17,6 +17,6 @@ interface InputGroup
         ?string $error = null,
     ): static;
     
-    public function getGroup(): BackendComponent;
+    public function getGroup(): BackendComponent|ContentComponent;
 
 }

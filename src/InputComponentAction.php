@@ -35,6 +35,7 @@ final class InputComponentAction implements ActionInterface
     protected $output;
 
     public function __construct(
+        /** @todo Model */
         private array $values = [],
         private array $errors = [],
         /** @todo add accessors */
@@ -110,14 +111,13 @@ final class InputComponentAction implements ActionInterface
         $recipe = Support::getRecipe($input);
 
 
-        return Support::resolveGroup(
+        return Support::initGroup(
             input: $input, 
-            defaultInputGroup: $this->defaultInputGroup, 
             defaultThemeManager: $this->defaultThemeManager, 
+            defaultInputGroup: $this->defaultInputGroup, 
             defaultThemeBag: $this->defaultThemeBag,
             value: $this->getValue($input),
             error: $this->getError($input),
-
         );
 
     }   

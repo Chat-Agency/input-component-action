@@ -7,7 +7,7 @@ use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Concerns\isComposer;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
@@ -15,7 +15,7 @@ use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 
 final class InputComposer implements ComponentComposer
 {
-    use isComposer;
+    use IsComposer;
 
     public function __construct(
         private InputInterface $input,
@@ -34,24 +34,69 @@ final class InputComposer implements ComponentComposer
 
     public function buildInputComponent(InputInterface|string $input): BackendComponent|ContentComponent
     {
+        
         $recipe = Support::getRecipe($input);
-
         $inputType = $this->resolveInputType($recipe);
-        
-        $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
-        $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
-        $callback = $recipe?->closureBag?->getInputClosure() ?? null;
-        $value = $this->resolveInputValue($recipe, $this->value);
-        $name = $this->resolveInputName($input);
-        $id = $this->resolveInputId($input);
 
-        $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
-        $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
-        
         /**
          * Init component
          */
         $component = new MainBackendComponent($inputType, $this->themeManager);
+
+        /**
+         * SubComponents
+         */
+        $subComponents = $this->buildInputSubComponents();
+
+        /**
+         * Access necessary values
+         */
+        $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
+        $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
+        $callback = $recipe?->closureBag?->getInputClosure() ?? null;
+        $value = $this->resolveInputValue($input, $this->value);
+        $name = $this->resolveInputName($input);
+        $id = $this->resolveInputId($input);
+
+        /**
+         * Resolve closures
+         */
+        $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
+        $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
+
+        /**
+         * Default attributes
+         */
+        if(!$recipe->disableDefaultNameAttribute) {
+            $component->setAttribute('name', $name);
+        }
+
+        if (!$recipe->disableDefaultIdAttribute) {
+            
+            $component->setAttribute('id', $id);
+        }
+        
+        /**
+         * Set/overwrite attributes
+         */
+        if($attributes) {
+            $component->setAttributes($attributes);
+        }
+
+        /**
+         * Set themes
+         */
+        if($theme) {
+            $component->setThemes($theme);
+        }
+
+        if($recipe->labelAsInputContent) {
+            $component->setContent($input->getLabel());
+        }
+
+        if($subComponents) {
+            $component->setContents($subComponents);
+        }
 
         /**
          * Set value or 
@@ -68,35 +113,8 @@ final class InputComposer implements ComponentComposer
         }
 
         /**
-         * Default attributes
+         * Resolve callback
          */
-        if(!$recipe->disableInputDefaultAttributes) {
-            $component->setAttribute('name', $name)
-                ->setAttribute('id', $id);
-        }
-        
-        /**
-         * Set/overwrite attributes
-         */
-        if($attributes) {
-            $component->setAttributes($attributes);
-        }
-
-        
-        if($theme) {
-            $component->setThemes($theme);
-        }
-
-        if($recipe->labelAsInputContent) {
-            $component->setContent($input->getLabel());
-        }
-
-        $subComponents = $this->buildInputSubComponents();
-
-        if($subComponents) {
-            $component->setContents($subComponents);
-        }
-
         $component = $this->resolveComponentClosure(
             component: $component, 
             closure: $callback, 

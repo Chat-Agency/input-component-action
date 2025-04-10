@@ -3,22 +3,20 @@
 namespace ChatAgency\InputComponentAction\Composers;
 
 use Closure;
-use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Concerns\isComposer;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 class WrapperComposer implements ComponentComposer
 {
-    use isComposer;
+    use IsComposer;
 
     public function __construct(
         private InputInterface $input,

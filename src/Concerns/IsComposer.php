@@ -2,6 +2,7 @@
 
 namespace ChatAgency\InputComponentAction\Concerns;
 
+use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use Closure;
 use BackedEnum;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
@@ -36,7 +37,7 @@ trait IsComposer
     public static function resolveInputName(InputInterface $input, ?array $attributes = null) : ?string
     {
         $recipe = Support::getRecipe($input);
-        $attributes ??= $recipe?->attributeBag?->getInputAttributes() ?? null;
+        $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
         return $attributes['name'] ?? $input->getName();
     }
@@ -44,21 +45,21 @@ trait IsComposer
     public static function resolveInputId(InputInterface $input, ?array $attributes = null) : ?string
     {
         $recipe = Support::getRecipe($input);
-        $attributes ??= $recipe?->attributeBag?->getInputAttributes() ?? null;
+        $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
         return $attributes['id'] ?? $input->getName();
     }
 
-    public function resolveWrapperType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    public function resolveWrapperType(InputComponentRecipe|RecipeInterface|null $recipe) : string|ComponentEnum
     {
         return $recipe->wrapperType ?? ComponentEnum::DIV;
     }
-    public function resolveLabelType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    public function resolveLabelType(InputComponentRecipe|RecipeInterface|null $recipe) : string|ComponentEnum
     {
         return $recipe->labelType ?? ComponentEnum::LABEL;
     }
 
-    public function resolveInputType(?InputComponentRecipe $recipe) : string|ComponentEnum
+    public function resolveInputType(InputComponentRecipe|RecipeInterface|null $recipe) : string|ComponentEnum
     {
         return $recipe->inputType ?? ComponentEnum::TEXT_INPUT;
     }

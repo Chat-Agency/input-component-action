@@ -7,6 +7,7 @@ use Exception;
 use BackedEnum;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
@@ -23,13 +24,13 @@ class Support
 {
     
     
-    public static function getRecipe(InputInterface $input) : InputComponentRecipe
+    public static function getRecipe(InputInterface $input) : RecipeInterface|InputComponentRecipe
     {
         return $input->getRecipe(InputComponentAction::getIdentifier()) ?? new InputComponentRecipe();
     }
     
 
-    public static function resolveGroup(InputInterface $input, InputGroup $defaultInputGroup = null, ThemeManager $defaultThemeManager = null, ThemeBag $defaultThemeBag = null, ?string $value = null, ?string $error = null): BackendComponent
+    public static function initGroup(InputInterface $input, ThemeManager $defaultThemeManager = null, InputGroup $defaultInputGroup = null, ThemeBag $defaultThemeBag = null, ?string $value = null, ?string $error = null): BackendComponent
     {
         $recipe = self::getRecipe($input);
         
@@ -47,19 +48,19 @@ class Support
 
     }  
 
-    public static function resolveThemeManager(InputComponentRecipe $recipe, $defaultThemeManager = null): ThemeManager
+    public static function resolveThemeManager(RecipeInterface $recipe, $defaultThemeManager = null): ThemeManager
     {
         return $recipe->defaultThemeManager ?? $defaultThemeManager ?? new LocalThemeManager;
     }
 
-    private static function resolveThemeBag(InputComponentRecipe $recipe, ?ThemeBag $defaultThemeBag = null): ThemeBag
+    private static function resolveThemeBag(RecipeInterface $recipe, ?ThemeBag $defaultThemeBag = null): ThemeBag
     {
         return $recipe->defaultThemeBag ?? $defaultThemeBag ?? new DefaultThemeBag();
     }
 
     public static function resolveArrayClosure(array|Closure|null $value, InputInterface $input, BackedEnum $type): ?array
     {
-        if($input === null) {
+        if($input == null) {
             return null;
         }
         
