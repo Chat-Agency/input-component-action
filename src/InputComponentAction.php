@@ -95,7 +95,7 @@ final class InputComponentAction implements ActionInterface
 
         /** Modifiers on the whole input group component */
         $component = $this->modifiers(
-            value: $this->resolveGroup($input), 
+            value: $this->resolveGroup($input),
             input: $input,
         );
 
