@@ -1,33 +1,32 @@
 <?php
 
+declare(strict_types=1);
+
 use Tests\Collections;
-use Chatagency\CrudAssistant\InputCollection;
-use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\DataContainer;
-use ChatAgency\InputComponentAction\Enums\FormInputTypes;
 use ChatAgency\InputComponentAction\InputComponentAction;
+use ChatAgency\InputComponentAction\Containers\OutputContainer;
 
 test('the action returns a data container object', function () {
-    
-    $action = new InputComponentAction();
+
+    $action = new InputComponentAction;
     $crud = Collections::simple();
 
     $output = $crud->execute($action);
 
     expect($output)
-        ->toBeInstanceOf(DataContainer::class);
+        ->toBeInstanceOf(OutputContainer::class);
 
-    
 });
 
-test('the data container has inputs and meta', function(){
+test('the data container has inputs and meta', function () {
 
-    $action = new InputComponentAction();
+    $action = new InputComponentAction;
     $crud = Collections::simple();
 
     $output = $crud->execute($action);
 
-    expect($output->get('inputs'))->toBeInstanceOf(DataContainer::class);
-    expect($output->get('meta'))->toBeInstanceOf(DataContainer::class);
+    expect($output->inputs)->toBeInstanceOf(DataContainer::class);
+    expect($output->meta)->toBeInstanceOf(DataContainer::class);
 
 });

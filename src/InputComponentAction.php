@@ -4,22 +4,23 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use Chatagency\CrudAssistant\Concerns\IsAction;
+use Chatagency\CrudAssistant\Contracts\ActionInterface;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
-use Chatagency\CrudAssistant\Concerns\IsAction;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use Chatagency\CrudAssistant\Contracts\ActionInterface;;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
+use ChatAgency\InputComponentAction\Containers\OutputContainer;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Utilities\Support;
 
-final class InputComponentAction implements ActionInterface 
+final class InputComponentAction implements ActionInterface
 {
     use IsAction;
 
@@ -28,24 +29,20 @@ final class InputComponentAction implements ActionInterface
     private ?ThemeManager $defaultThemeManager = null;
 
     private ?InputGroup $defaultInputGroup = null;
-    
-    private ?ThemeBag $defaultThemeBag = null;
 
-    /** @var DataContainer<DataContainer> */
-    protected $output;
+    private ?ThemeBag $defaultThemeBag = null;
 
     public function __construct(
         /** @todo Model */
         private array $values = [],
         private array $errors = [],
         /** @todo add accessors */
-    ) 
-    {
-        $this->initOutput();
+    ) {
+        $this->output = new OutputContainer;
 
-        $this->output->inputs = new DataContainer();
-        $this->output->meta = new DataContainer();
-        
+        $this->output->inputs = new DataContainer;
+        $this->output->meta = new DataContainer;
+
     }
 
     public function setThemeManager(ThemeManager $defaultThemeManager): static
@@ -69,7 +66,7 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function execute(InputCollection|InputInterface|\IteratorAggregate $input) 
+    public function execute(InputCollection|InputInterface|\IteratorAggregate $input)
     {
         /**
          * @var DataContainer<InputInterface> $inputs
@@ -77,55 +74,53 @@ final class InputComponentAction implements ActionInterface
         $inputs = $this->output->inputs;
 
         $name = Support::getName($input);
-        
+
         $inputs->set($name, $this->resolveInputs($input));
 
         return $this->output;
     }
 
-    public function resolveInputs(InputCollection|InputInterface|\IteratorAggregate $input): array|BackendComponent|ContentComponent 
+    public function resolveInputs(InputCollection|InputInterface|\IteratorAggregate $input): array|BackendComponent|ContentComponent
     {
         /**
-         * Recursively resolve inputs 
+         * Recursively resolve inputs
          * and input collections.
          */
         if (CrudAssistant::isInputCollection($input) && $this->controlsRecursion()) {
             $wrapper = $this->getWrapper($input);
-            
-            foreach ($input->getInputs() as $item) {
+
+            foreach ($input as $item) {
                 $wrapper->setContent($this->resolveInputs($item));
             }
 
             return $wrapper;
         }
-        
+
         $component = $this->resolveGroup($input);
-        
-        
+
         return $component;
-        
+
     }
-    
+
     public function resolveGroup(InputInterface $input): BackendComponent
     {
         $recipe = Support::getRecipe($input);
 
-
         return Support::initGroup(
-            input: $input, 
-            defaultThemeManager: $this->defaultThemeManager, 
-            defaultInputGroup: $this->defaultInputGroup, 
+            input: $input,
+            defaultThemeManager: $this->defaultThemeManager,
+            defaultInputGroup: $this->defaultInputGroup,
             defaultThemeBag: $this->defaultThemeBag,
             value: $this->getValue($input),
             error: $this->getError($input),
         );
 
-    }   
+    }
 
     public function getWrapper(InputInterface $input): BackendComponent|ContentComponent|ThemeComponent
     {
         $recipe = Support::getRecipe($input);
-        
+
         $composer = new WrapperComposer(
             input: $input,
             themeManager: Support::resolveThemeManager($recipe, $this->defaultThemeManager),
@@ -135,16 +130,18 @@ final class InputComponentAction implements ActionInterface
         return $composer->build();
     }
 
-  
     public function getValue(InputInterface $input): ?string
     {
+        /**
+         * @todo Work on model
+         */
         $name = $input->getName();
         $recipe = Support::getRecipe($input);
 
         $recipeValue = $recipe->inputValue;
         $value = null;
 
-        if(Support::isClosure($recipeValue)) {
+        if (Support::isClosure($recipeValue)) {
             $value = $recipeValue($input, $this->values);
         } else {
             $value = $recipeValue;
@@ -161,7 +158,7 @@ final class InputComponentAction implements ActionInterface
         $recipeError = $recipe->inputError;
         $error = null;
 
-        if(Support::isClosure($recipeError)) {
+        if (Support::isClosure($recipeError)) {
             $error = $recipeError($input, $this->errors);
         } else {
             $error = $recipeError;
@@ -169,5 +166,4 @@ final class InputComponentAction implements ActionInterface
 
         return $error ?? $this->errors[$name] ?? null;
     }
-
 }

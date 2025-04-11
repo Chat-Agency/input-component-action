@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Composers;
 
-use Closure;
-use ChatAgency\BackendComponents\MainBackendComponent;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputCollectionInterface;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use Closure;
 
 final class InputComposer implements ComponentComposer
 {
@@ -24,18 +26,16 @@ final class InputComposer implements ComponentComposer
         private array|Closure|null $defaultInputTheme = [],
         private ?string $value = null,
         private ?string $error = null,
-    ) 
-    {
-    }
+    ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
-       return $this->buildInputComponent($this->input);
+        return $this->buildInputComponent($this->input);
     }
 
     public function buildInputComponent(InputInterface|InputCollectionInterface $input): BackendComponent|ContentComponent
     {
-        
+
         $recipe = Support::getRecipe($input);
         $inputType = $this->resolveInputType($recipe);
 
@@ -54,8 +54,8 @@ final class InputComposer implements ComponentComposer
          */
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
-        $callback = $recipe?->closureBag?->getInputClosure() ?? null;
-        $value = $this->resolveInputValue($input, $this->value);
+        $callback = $recipe->closureBag?->getInputClosure() ?? null;
+        $value = $this->resolveInputValue($input, $this->value, $this->error);
         $name = $this->resolveInputName($input);
         $id = $this->resolveInputId($input);
 
@@ -68,48 +68,48 @@ final class InputComposer implements ComponentComposer
         /**
          * Default attributes
          */
-        if(!$recipe->disableDefaultNameAttribute) {
+        if (! $recipe->disableDefaultNameAttribute) {
             $component->setAttribute('name', $name);
         }
 
-        if (!$recipe->disableDefaultIdAttribute) {
-            
+        if (! $recipe->disableDefaultIdAttribute) {
+
             $component->setAttribute('id', $id);
         }
-        
+
         /**
          * Set/overwrite attributes
          */
-        if($attributes) {
+        if ($attributes) {
             $component->setAttributes($attributes);
         }
 
         /**
          * Set themes
          */
-        if($theme) {
+        if ($theme) {
             $component->setThemes($theme);
         }
 
-        if($recipe->labelAsInputContent) {
+        if ($recipe->labelAsInputContent) {
             $component->setContent($input->getLabel());
         }
 
-        if($subComponents) {
+        if ($subComponents) {
             $component->setContents($subComponents);
         }
 
         /**
-         * Set value or 
+         * Set value or
          * selected state
          */
         $selected = $name === $value;
 
-        if($recipe->ckeckable && $selected) {
+        if ($recipe->ckeckable && $selected) {
             $component->setAttribute('checked', $selected);
-        } elseif($recipe->selectable && $selected) {
+        } elseif ($recipe->selectable && $selected) {
             $component->setAttribute('selected', $selected);
-        } elseif(!is_null($value)) {
+        } elseif (! is_null($value)) {
             $component->setAttribute('value', $value);
         }
 
@@ -117,16 +117,15 @@ final class InputComposer implements ComponentComposer
          * Resolve callback
          */
         $component = $this->resolveComponentClosure(
-            component: $component, 
-            closure: $callback, 
-            input: $input, 
+            component: $component,
+            closure: $callback,
+            input: $input,
             type: $inputType
         );
 
         return $component;
     }
 
-    
     public function buildInputSubComponents(): ?array
     {
         $input = $this->input;
@@ -134,16 +133,14 @@ final class InputComposer implements ComponentComposer
         $subElements = $input->getSubElements();
         $components = [];
 
-        if(!$subElements) {
+        if (! $subElements) {
             return null;
         }
-        
+
         foreach ($subElements->getInputs() as $element) {
             $components[] = $this->resolveGroup($element);
         }
 
         return $components;
     }
-
-
 }

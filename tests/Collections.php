@@ -11,7 +11,7 @@ use Chatagency\CrudAssistant\Inputs\TextInput;
 
 class Collections
 {
-    public  static function simple(): InputCollection
+    public static function simple(): InputCollection
     {
         return CrudAssistant::make([
             new TextInput('name', 'Name'),

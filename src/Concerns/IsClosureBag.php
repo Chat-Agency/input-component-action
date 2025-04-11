@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Concerns;
 
 use Closure;
@@ -9,7 +11,7 @@ trait IsClosureBag
     private ?Closure $wrapperClosure = null;
 
     private ?Closure $inputClosure = null;
-    
+
     private ?Closure $labelClosure = null;
 
     private ?Closure $errorClosure = null;
@@ -41,6 +43,7 @@ trait IsClosureBag
 
         return $this;
     }
+
     public function getWrapperClosure(): ?Closure
     {
         return $this->wrapperClosure;

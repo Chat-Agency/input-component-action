@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Concerns;
 
 use Closure;
@@ -9,7 +11,7 @@ trait IsAttributeBag
     private Closure|array|null $wrapperAttributes = null;
 
     private Closure|array|null $inputAttributes = null;
-    
+
     private Closure|array|null $labelAttributes = null;
 
     private Closure|array|null $errorAttributes = null;
@@ -41,6 +43,7 @@ trait IsAttributeBag
 
         return $this;
     }
+
     public function getWrapperAttributes(): Closure|array|null
     {
         return $this->wrapperAttributes;

@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Contracts;
 
 use Closure;
@@ -17,7 +19,7 @@ interface ClosureBag
     public function getWrapperClosure(): ?Closure;
 
     public function getInputClosure(): ?Closure;
-    
+
     public function getLabelClosure(): ?Closure;
 
     public function getErrorClosure(): ?Closure;

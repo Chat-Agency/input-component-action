@@ -1,18 +1,20 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Composers;
 
-use Closure;
-use ChatAgency\BackendComponents\MainBackendComponent;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\BackendComponents\MainBackendComponent;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use Closure;
 
 class WrapperComposer implements ComponentComposer
 {
@@ -24,9 +26,7 @@ class WrapperComposer implements ComponentComposer
         private array|Closure|null $defaultWrapperTheme = [],
         private ?string $value = null,
         private ?string $error = null,
-    ) 
-    {
-    }
+    ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
@@ -36,27 +36,27 @@ class WrapperComposer implements ComponentComposer
         $inputType = $this->resolveInputType($recipe);
         $componentType = $this->resolveWrapperType($recipe);
 
-        $attributes = $recipe?->attributeBag?->getInputAttributes() ?? null;
-        $theme = $recipe?->themeBag?->getWrapperTheme() ?? $this->defaultWrapperTheme;
+        $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
+        $theme = $recipe->themeBag?->getWrapperTheme() ?? $this->defaultWrapperTheme;
         $callback = $recipe?->closureBag ?? new DefaultClosureBag;
-        
+
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
 
         $component = new MainBackendComponent($componentType, $this->themeManager);
-        
-        if($theme) {
+
+        if ($theme) {
             $component->setThemes($theme);
         }
 
-        if($recipe->labelAsInputContent) {
+        if ($recipe->labelAsInputContent) {
             $component->setContent($input->getLabel());
         }
 
         $component = $this->resolveComponentClosure(
-            component: $component, 
-            closure: $callback->getWrapperClosure(), 
-            input: $input, 
+            component: $component,
+            closure: $callback->getWrapperClosure(),
+            input: $input,
             type: $inputType
         );
 

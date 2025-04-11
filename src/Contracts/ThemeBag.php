@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Contracts;
 
 use Closure;
@@ -17,7 +19,7 @@ interface ThemeBag
     public function getWrapperTheme(): Closure|array|null;
 
     public function getInputTheme(): Closure|array|null;
-    
+
     public function getLabelTheme(): Closure|array|null;
 
     public function getErrorTheme(): Closure|array|null;

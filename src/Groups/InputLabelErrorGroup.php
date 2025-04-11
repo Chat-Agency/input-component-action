@@ -1,11 +1,13 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Groups;
 
-use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\InputComponentAction\Concerns\IsInputGroup;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Concerns\IsInputGroup;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class InputLabelErrorGroup implements InputGroup
@@ -23,15 +25,14 @@ final class InputLabelErrorGroup implements InputGroup
 
         $components[] = $input;
 
-        if($label) {
+        if ($label) {
             $components[] = $label;
         }
-        
-        if($error ) {
-            $components[] = $error ;
+
+        if ($error) {
+            $components[] = $error;
         }
 
         return $wrapper->setContents($components);
     }
-
 }

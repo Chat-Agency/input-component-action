@@ -1,9 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Bags;
 
-use ChatAgency\InputComponentAction\Contracts\ClosureBag;
 use ChatAgency\InputComponentAction\Concerns\IsClosureBag;
+use ChatAgency\InputComponentAction\Contracts\ClosureBag;
 
 class DefaultClosureBag implements ClosureBag
 {

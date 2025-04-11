@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Concerns;
 
 use Closure;
@@ -9,7 +11,7 @@ trait IsThemeBag
     private Closure|array|null $wrapperTheme = null;
 
     private Closure|array|null $inputTheme = null;
-    
+
     private Closure|array|null $labelTheme = null;
 
     private Closure|array|null $errorTheme = null;
@@ -41,6 +43,7 @@ trait IsThemeBag
 
         return $this;
     }
+
     public function getWrapperTheme(): Closure|array|null
     {
         return $this->wrapperTheme;
@@ -60,5 +63,4 @@ trait IsThemeBag
     {
         return $this->errorTheme;
     }
-
 }

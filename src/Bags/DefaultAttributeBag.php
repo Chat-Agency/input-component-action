@@ -1,10 +1,11 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Bags;
 
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\AttributeBag;
 use ChatAgency\InputComponentAction\Concerns\IsAttributeBag;
+use ChatAgency\InputComponentAction\Contracts\AttributeBag;
 
 class DefaultAttributeBag implements AttributeBag
 {
