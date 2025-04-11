@@ -68,9 +68,6 @@ final class InputComponentAction implements ActionInterface
 
     public function execute(InputCollection|InputInterface|\IteratorAggregate $input)
     {
-        /**
-         * @var DataContainer<InputInterface> $inputs
-         */
         $inputs = $this->output->inputs;
 
         $name = Support::getName($input);
