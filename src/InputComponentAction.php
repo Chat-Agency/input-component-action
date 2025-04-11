@@ -93,7 +93,11 @@ final class InputComponentAction implements ActionInterface
             return $wrapper;
         }
 
-        $component = $this->resolveGroup($input);
+        /** Modifiers on the whole input group component */
+        $component = $this->modifiers(
+            value: $this->resolveGroup($input), 
+            input: $input,
+        );
 
         return $component;
 
@@ -120,7 +124,7 @@ final class InputComponentAction implements ActionInterface
 
         $composer = new WrapperComposer(
             input: $input,
-            themeManager: Support::resolveThemeManager($recipe, $this->defaultThemeManager),
+            themeManager: Support::resolveThemeManager($recipe, defaultThemeManager: $this->defaultThemeManager),
             defaultWrapperTheme: $this->defaultThemeBag->getWrapperTheme(),
         );
 
