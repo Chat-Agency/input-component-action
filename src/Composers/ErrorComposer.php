@@ -36,10 +36,9 @@ final class ErrorComposer implements ComponentComposer
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
         $component = new MainBackendComponent($componentType, $themeManager);
-        
+
         $theme = $recipe->themeBag?->getLabelTheme() ?? $this->defaultErrorTheme;
         $themes = Support::resolveArrayClosure(value: $theme ?? $this->defaultErrorTheme, input: $input, type: $componentType);
-
 
         if ($themes) {
             $component->setThemes($themes);
