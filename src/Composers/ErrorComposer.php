@@ -32,12 +32,14 @@ final class ErrorComposer implements ComponentComposer
     {
         $input = $this->input;
         $recipe = Support::getRecipe($input);
-
         $componentType = $this->resolveErrorType($recipe);
+        $themeManager = $recipe->themeManager ?? $this->themeManager;
+
+        $component = new MainBackendComponent($componentType, $themeManager);
+        
         $theme = $recipe->themeBag?->getLabelTheme() ?? $this->defaultErrorTheme;
         $themes = Support::resolveArrayClosure(value: $theme ?? $this->defaultErrorTheme, input: $input, type: $componentType);
 
-        $component = new MainBackendComponent($componentType, $this->themeManager);
 
         if ($themes) {
             $component->setThemes($themes);

@@ -38,11 +38,12 @@ final class InputComposer implements ComponentComposer
 
         $recipe = Support::getRecipe($input);
         $inputType = $this->resolveInputType($recipe);
+        $themeManager = $recipe->themeManager ?? $this->themeManager;
 
         /**
          * Init component
          */
-        $component = new MainBackendComponent($inputType, $this->themeManager);
+        $component = new MainBackendComponent($inputType, $themeManager);
 
         /**
          * SubComponents
