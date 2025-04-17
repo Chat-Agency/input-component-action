@@ -4,22 +4,21 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
-use Traversable;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use Chatagency\CrudAssistant\Concerns\IsAction;
+use Chatagency\CrudAssistant\Contracts\ActionInterface;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
-use Chatagency\CrudAssistant\Concerns\IsAction;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use Chatagency\CrudAssistant\Contracts\ActionInterface;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class InputComponentAction implements ActionInterface
 {
