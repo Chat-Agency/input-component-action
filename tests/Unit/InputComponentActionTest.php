@@ -26,7 +26,9 @@ test('the data container has inputs and meta', function () {
 
     $output = $crud->execute($action);
 
-    expect($output->inputs)->toBeInstanceOf(DataContainer::class);
-    expect($output->meta)->toBeInstanceOf(DataContainer::class);
+    expect($output->inputs)
+        ->toBeInstanceOf(DataContainer::class);
+    expect($output->meta)
+        ->toBeInstanceOf(DataContainer::class);
 
 });

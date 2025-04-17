@@ -10,7 +10,7 @@ use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
+use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Utilities\Support;
@@ -41,7 +41,7 @@ class WrapperComposer implements ComponentComposer
 
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getWrapperTheme() ?? $this->defaultWrapperTheme;
-        $callback = $recipe?->closureBag ?? new DefaultClosureBag;
+        $callback = $recipe?->hookBag ?? new DefaultHookBag;
 
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
@@ -54,9 +54,9 @@ class WrapperComposer implements ComponentComposer
             $component->setContent($input->getLabel());
         }
 
-        $component = $this->resolveComponentClosure(
+        $component = $this->resolveComponentHook(
             component: $component,
-            closure: $callback->getWrapperClosure(),
+            closure: $callback->getWrapperHook(),
             input: $input,
             type: $inputType
         );

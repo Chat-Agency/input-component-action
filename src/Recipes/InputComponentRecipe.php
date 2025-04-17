@@ -9,7 +9,7 @@ use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Concerns\IsRecipe;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\Contracts\AttributeBag;
-use ChatAgency\InputComponentAction\Contracts\ClosureBag;
+use ChatAgency\InputComponentAction\Contracts\HookBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\InputComponentAction;
@@ -40,7 +40,7 @@ final class InputComponentRecipe implements RecipeInterface
 
         public readonly ?AttributeBag $attributeBag = null,
         public readonly ?ThemeBag $themeBag = null,
-        public readonly ?ClosureBag $closureBag = null,
+        public readonly ?HookBag $hookBag = null,
 
         public readonly bool $disableWrapper = false,
         public readonly bool $disableLabel = false,
@@ -50,10 +50,12 @@ final class InputComponentRecipe implements RecipeInterface
          * Disables adding the name and
          * id to the input by default
          */
+        public readonly bool $disableInputValue = false,
         public readonly bool $disableDefaultNameAttribute = false,
         public readonly bool $disableDefaultIdAttribute = false,
+        public readonly bool $disableDefaultForAttribute = false,
 
-        public readonly bool $ckeckable = false,
+        public readonly bool $checkable = false,
         public readonly bool $selectable = false,
 
         public readonly bool $isInputGroup = false,

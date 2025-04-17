@@ -6,19 +6,17 @@ namespace Tests;
 
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\InputCollection;
-use Chatagency\CrudAssistant\Inputs\TextareaInput;
-use Chatagency\CrudAssistant\Inputs\TextInput;
+use Chatagency\CrudAssistant\Inputs\DefaultInput;
 
 class Collections
 {
     public static function simple(): InputCollection
     {
         return CrudAssistant::make([
-            new TextInput('name', 'Name'),
-            (new TextInput('email', 'Email'))
-                ->setType('email'),
-            new TextInput('phone', 'Phone'),
-            new TextareaInput('description', 'Description'),
+            new DefaultInput('name', 'Name'),
+            new DefaultInput('email', 'Email'),
+            new DefaultInput('phone', 'Phone'),
+            new DefaultInput('description', 'Description'),
         ]);
     }
 }

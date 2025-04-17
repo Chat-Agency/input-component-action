@@ -55,8 +55,8 @@ final class InputComposer implements ComponentComposer
          */
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
-        $callback = $recipe->closureBag?->getInputClosure() ?? null;
-        $value = $this->resolveInputValue($input, $this->value, $this->error);
+        $callback = $recipe->hookBag?->getInputHook() ?? null;
+        $value = $this->value;
         $name = $this->resolveInputName($input);
         $id = $this->resolveInputId($input);
 
@@ -74,20 +74,9 @@ final class InputComposer implements ComponentComposer
         }
 
         if (! $recipe->disableDefaultIdAttribute) {
-
             $component->setAttribute('id', $id);
         }
 
-        /**
-         * Set/overwrite attributes
-         */
-        if ($attributes) {
-            $component->setAttributes($attributes);
-        }
-
-        /**
-         * Set themes
-         */
         if ($theme) {
             $component->setThemes($theme);
         }
@@ -100,24 +89,30 @@ final class InputComposer implements ComponentComposer
             $component->setContents($subComponents);
         }
 
-        /**
-         * Set value or
-         * selected state
-         */
-        $selected = $name === $value;
-
-        if ($recipe->ckeckable && $selected) {
-            $component->setAttribute('checked', $selected);
-        } elseif ($recipe->selectable && $selected) {
-            $component->setAttribute('selected', $selected);
-        } elseif (! is_null($value)) {
+        if (! $recipe->disableInputValue && ! is_null($value)) {
             $component->setAttribute('value', $value);
         }
 
         /**
-         * Resolve callback
+         * Set value or
+         * selected state
          */
-        $component = $this->resolveComponentClosure(
+        $selectedOrSelected = $name === $value;
+
+        if ($recipe->checkable && $selectedOrSelected) {
+            $component->setAttribute('checked', $selectedOrSelected);
+        } elseif ($recipe->selectable && $selectedOrSelected) {
+            $component->setAttribute('selected', $selectedOrSelected);
+        }
+
+        /**
+         * Set/overwrite attributes
+         */
+        if ($attributes) {
+            $component->setAttributes($attributes);
+        }
+
+        $component = $this->resolveComponentHook(
             component: $component,
             closure: $callback,
             input: $input,

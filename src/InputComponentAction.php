@@ -4,21 +4,22 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use Chatagency\CrudAssistant\Concerns\IsAction;
-use Chatagency\CrudAssistant\Contracts\ActionInterface;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
+use Traversable;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
+use Chatagency\CrudAssistant\Concerns\IsAction;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use Chatagency\CrudAssistant\Contracts\ActionInterface;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
-use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class InputComponentAction implements ActionInterface
 {
@@ -33,10 +34,9 @@ final class InputComponentAction implements ActionInterface
     private ?ThemeBag $defaultThemeBag = null;
 
     public function __construct(
-        /** @todo Model */
+        private ?object $model = null,
         private array $values = [],
         private array $errors = [],
-        /** @todo add accessors */
     ) {
         $this->output = new OutputContainer;
 
@@ -95,7 +95,7 @@ final class InputComponentAction implements ActionInterface
 
         /** Modifiers on the whole input group component */
         $component = $this->modifiers(
-            value: $this->resolveGroup($input),
+            value: $this->getGroup($input),
             input: $input,
         );
 
@@ -103,10 +103,8 @@ final class InputComponentAction implements ActionInterface
 
     }
 
-    public function resolveGroup(InputInterface $input): BackendComponent
+    public function getGroup(InputInterface $input): BackendComponent
     {
-        $recipe = Support::getRecipe($input);
-
         return Support::initGroup(
             input: $input,
             defaultThemeManager: $this->defaultThemeManager,
@@ -136,7 +134,7 @@ final class InputComponentAction implements ActionInterface
         /**
          * @todo Work on model
          */
-        $name = $input->getName();
+        $name = Support::getName($input);
         $recipe = Support::getRecipe($input);
 
         $recipeValue = $recipe->inputValue;
@@ -153,7 +151,7 @@ final class InputComponentAction implements ActionInterface
 
     public function getError(InputInterface $input): ?string
     {
-        $name = $input->getName();
+        $name = Support::getName($input);
         $recipe = Support::getRecipe($input);
 
         $recipeError = $recipe->inputError;

@@ -10,7 +10,7 @@ use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultClosureBag;
+use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Utilities\Support;
@@ -31,24 +31,28 @@ final class LabelComposer implements ComponentComposer
     public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
         $input = $this->input;
+        $name = Support::getName($input);
         $recipe = Support::getRecipe($input);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
+
         $componentType = $this->resolveLabelType($recipe);
+        $label = $this->resolveLabel($input);
 
         $component = new MainBackendComponent($componentType, $themeManager);
 
         $inputType = $this->resolveInputType($recipe);
 
-        $attributes = $recipe->attributeBag?->getLabelAttributes() ?? null;
-        $callback = $recipe->closureBag ?? new DefaultClosureBag;
+        $attributes = $recipe->attributeBag?->getLabelAttributes();
         $theme = $recipe->themeBag?->getLabelTheme() ?? $this->defaultLabelTheme;
 
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $themes = Support::resolveArrayClosure(value: $theme ?? $this->defaultLabelTheme, input: $input, type: $inputType);
-        $label = $this->resolveLabel($input);
+        
+        $component->setContent($label);
 
-        $component->setContent($label)
-            ->setAttribute('for', $input->getName());
+        if(! $recipe->disableDefaultForAttribute) {
+            $component->setAttribute('for', $name);
+        }
 
         if ($attributes) {
             $component->setAttributes($attributes);
@@ -58,9 +62,10 @@ final class LabelComposer implements ComponentComposer
             $component->setThemes($themes);
         }
 
-        $component = $this->resolveComponentClosure(
+        $callback = $recipe->hookBag ?? new DefaultHookBag;
+        $component = $this->resolveComponentHook(
             component: $component,
-            closure: $callback->getLabelClosure(),
+            closure: $callback->getLabelHook(),
             input: $input,
             type: $inputType
         );

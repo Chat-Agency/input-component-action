@@ -29,20 +29,6 @@ trait IsComposer
 
     }
 
-    public static function resolveInputValue(InputInterface $input, ?string $value = null, ?string $error = null): ?string
-    {
-        $recipe = Support::getRecipe($input);
-
-        $recipeValue = $recipe->inputValue;
-
-        if (Support::isClosure($recipeValue)) {
-            /** @var string $recipeValue */
-            $recipeValue = $recipeValue($input, $value, $error);
-        }
-
-        return (! is_null($recipe->inputValue)) ? $recipeValue : $value;
-    }
-
     public static function resolveLabel(InputInterface $input, ?string $value = null, ?string $error = null): string
     {
         $recipe = Support::getRecipe($input);
@@ -50,8 +36,6 @@ trait IsComposer
         $recipeLabel = $recipe->label;
 
         if (Support::isClosure($recipeLabel)) {
-            $value = self::resolveInputValue($input, $value, $error);
-
             /** @var string $recipeLabel */
             $recipeLabel = $recipeLabel($input, $value, $error);
         }
@@ -64,7 +48,7 @@ trait IsComposer
         $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
-        return $attributes['name'] ?? $input->getName();
+        return $attributes['name'] ?? Support::getName($input);
     }
 
     public static function resolveInputId(InputInterface $input, ?array $attributes = null): ?string
@@ -72,7 +56,7 @@ trait IsComposer
         $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
-        return $attributes['id'] ?? $input->getName();
+        return $attributes['id'] ?? Support::getName($input);
     }
 
     public function resolveWrapperType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
@@ -95,7 +79,7 @@ trait IsComposer
         return $recipe->errorType ?? ComponentEnum::PARAGRAPH;
     }
 
-    public function resolveComponentClosure(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent
+    public function resolveComponentHook(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent
     {
         if (Support::isClosure($closure)) {
             /** @var array $closure */

@@ -15,8 +15,6 @@ use Closure;
 
 interface ComponentComposer
 {
-    public static function resolveInputValue(InputInterface $input, ?string $value = null): ?string;
-
     public function resolveGroup(InputInterface $input): BackendComponent;
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent;
@@ -29,5 +27,5 @@ interface ComponentComposer
 
     public function resolveErrorType(?InputComponentRecipe $recipe): string|ComponentEnum;
 
-    public function resolveComponentClosure(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent|ThemeComponent;
+    public function resolveComponentHook(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent|ThemeComponent;
 }
