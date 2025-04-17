@@ -128,13 +128,15 @@ final class InputComponentAction implements ActionInterface
         return $composer->build();
     }
 
-    public function getValue(InputInterface $input): ?string
+    public function getValue(InputInterface $input, ?object $model = null): ?string
     {
         /**
          * @todo Work on model
          */
         $name = Support::getName($input);
         $recipe = Support::getRecipe($input);
+
+        $modelValue = $model->{$name} ?? null;
 
         $recipeValue = $recipe->inputValue;
         $value = null;
@@ -145,7 +147,7 @@ final class InputComponentAction implements ActionInterface
             $value = $recipeValue;
         }
 
-        return $value ?? $this->values[$name] ?? null;
+        return $value ?? $this->values[$name] ?? $modelValue ?? null;
     }
 
     public function getError(InputInterface $input): ?string
