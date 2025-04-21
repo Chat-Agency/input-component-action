@@ -24,6 +24,8 @@ final class InputComponentRecipe implements RecipeInterface
 
     public function __construct(
         public readonly string|Closure|null $inputValue = null,
+        public readonly bool $useParentValue = false,
+
         public readonly string|Closure|null $inputError = null,
 
         public readonly ?InputGroup $inputGroup = null,
@@ -47,17 +49,19 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $disableError = false,
 
         /**
-         * Disables adding the name and
-         * id to the input by default
+         * Disable attributes created
+         * by default
          */
         public readonly bool $disableInputValue = false,
         public readonly bool $disableDefaultNameAttribute = false,
         public readonly bool $disableDefaultIdAttribute = false,
         public readonly bool $disableDefaultForAttribute = false,
 
+        /**
+         * Select menu, checkbox of radiobox
+         */
         public readonly bool $checkable = false,
         public readonly bool $selectable = false,
 
-        public readonly bool $isInputGroup = false,
     ) {}
 }

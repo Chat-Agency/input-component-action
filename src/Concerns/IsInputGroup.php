@@ -30,6 +30,8 @@ trait IsInputGroup
 
     private ?ThemeBag $defaultThemeBag = null;
 
+    private ?InputInterface $parent = null;
+
     public function inject(
         InputInterface $input,
         ThemeManager $themeManager,
@@ -42,6 +44,13 @@ trait IsInputGroup
         $this->values = $values;
         $this->errors = $errors;
         $this->defaultThemeBag = $defaultThemeBag;
+
+        return $this;
+    }
+
+    public function setParent(InputInterface $parent): static
+    {
+        $this->parent = $parent;
 
         return $this;
     }
@@ -62,6 +71,10 @@ trait IsInputGroup
             defaultWrapperTheme: $this->defaultThemeBag?->getWrapperTheme(),
         );
 
+        if ($this->parent) {
+            $composer->setParent($this->parent);
+        }
+
         return $composer->build();
     }
 
@@ -81,6 +94,10 @@ trait IsInputGroup
             defaultLabelTheme: $this->defaultThemeBag?->getLabelTheme(),
         );
 
+        if ($this->parent) {
+            $composer->setParent($this->parent);
+        }
+
         return $composer->build();
 
     }
@@ -95,6 +112,10 @@ trait IsInputGroup
             defaultInputTheme: $this->defaultThemeBag?->getInputTheme(),
         );
 
+        if ($this->parent) {
+            $composer->setParent($this->parent);
+        }
+
         return $composer->build();
     }
 
@@ -106,7 +127,7 @@ trait IsInputGroup
             return null;
         }
 
-        $error = new ErrorComposer(
+        $composer = new ErrorComposer(
             input: $this->input,
             themeManager: $this->themeManager,
             values: $this->values,
@@ -114,6 +135,10 @@ trait IsInputGroup
             defaultErrorTheme: $this->defaultThemeBag?->getErrorTheme(),
         );
 
-        return $error->build();
+        if ($this->parent) {
+            $composer->setParent($this->parent);
+        }
+
+        return $composer->build();
     }
 }

@@ -15,6 +15,7 @@ use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
 use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use Closure;
 
@@ -51,7 +52,7 @@ final class InputComposer implements ComponentComposer
         /**
          * SubComponents
          */
-        $subComponents = $this->buildInputSubComponents();
+        $subComponents = $this->buildSubComponentGroup();
 
         /**
          * Access
@@ -60,11 +61,9 @@ final class InputComposer implements ComponentComposer
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
         $callback = $recipe->hookBag?->getInputHook() ?? null;
 
-        $value = $valueResolver->resolve($input);
+        $value = $valueResolver->resolve($input, $recipe);
         $name = $this->resolveInputName($input);
         $id = $this->resolveInputId($input);
-
-        // dump($name.' - '.$value);
 
         /**
          * Resolve closures
@@ -100,18 +99,9 @@ final class InputComposer implements ComponentComposer
         }
 
         /**
-         * Set value or
-         * selected state
+         * Checkable and selectable inputs
          */
-        $selectedOrSelected = $name === $value;
-
-        if ($recipe->checkable && $selectedOrSelected) {
-
-            $component->setAttribute('checked', $selectedOrSelected);
-
-        } elseif ($recipe->selectable && $selectedOrSelected) {
-            $component->setAttribute('selected', $selectedOrSelected);
-        }
+        $this->addCheckableAndSelectableAttribute($input, $recipe, $component, $valueResolver, $value);
 
         /**
          * Set/overwrite attributes
@@ -130,7 +120,7 @@ final class InputComposer implements ComponentComposer
         return $component;
     }
 
-    public function buildInputSubComponents(): ?array
+    public function buildSubComponentGroup(): ?array
     {
         $input = $this->input;
 
@@ -142,9 +132,32 @@ final class InputComposer implements ComponentComposer
         }
 
         foreach ($subElements->getInputs() as $element) {
-            $components[] = $this->resolveGroup($element);
+            $components[] = $this->resolveGroup($element, $input);
         }
 
         return $components;
+    }
+
+    public function addCheckableAndSelectableAttribute(InputInterface $input, InputComponentRecipe $recipe, BackendComponent $component, DefaultValueBag $valueResolver, ?string $value = null): void
+    {
+        if ($recipe->checkable || $recipe->selectable) {
+
+            $isSelected = false;
+
+            if ($recipe->useParentValue && $this->parent) {
+                $parentValue = $valueResolver->resolve($this->parent, Support::getRecipe($this->parent));
+                $isSelected = $value == $parentValue;
+            } else {
+                $isSelected = $valueResolver->resolve($input, $recipe, true);
+            }
+
+            if ($recipe->selectable && $isSelected) {
+                $component->setAttribute('selected', 'selected');
+            }
+
+            if ($recipe->checkable && $isSelected) {
+                $component->setAttribute('checked', 'checked');
+            }
+        }
     }
 }

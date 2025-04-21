@@ -16,7 +16,9 @@ use Closure;
 
 trait IsComposer
 {
-    public function resolveGroup(InputInterface $input): BackendComponent
+    protected ?InputInterface $parent = null;
+
+    public function resolveGroup(InputInterface $input, ?InputInterface $parent = null): BackendComponent
     {
         return Support::initGroup(
             input: $input,
@@ -25,8 +27,16 @@ trait IsComposer
             values: $this->values,
             errors: $this->errors,
             defaultThemeBag: null,
+            parent: $parent,
         );
 
+    }
+
+    public function setParent(InputInterface $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
     }
 
     public static function resolveLabel(InputInterface $input, ?string $value = null, ?string $error = null): string

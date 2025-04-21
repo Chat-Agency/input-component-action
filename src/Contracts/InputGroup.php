@@ -22,4 +22,6 @@ interface InputGroup
     ): static;
 
     public function getGroup(): BackendComponent|ContentComponent;
+
+    public function setParent(InputInterface $parent): static;
 }

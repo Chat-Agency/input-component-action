@@ -15,7 +15,7 @@ class DefaultValueBag
         private ?object $model,
     ) {}
 
-    public function resolve(InputInterface $input, ?InputComponentRecipe $recipe = null): ?string
+    public function resolve(InputInterface $input, InputComponentRecipe $recipe, bool $ignoreRecipeValue = false): ?string
     {
         $values = $this->values;
         $model = $this->model;
@@ -23,22 +23,21 @@ class DefaultValueBag
         $name = Support::getName($input);
 
         $defaultValue = $values[$name] ?? null;
+        $recipeValue = $recipe->inputValue;
         $modelValue = null;
-        $recipeValue = null;
 
         if ($model) {
             $modelValue = $model->{$name} ?? null;
         }
 
-        if ($recipe) {
-            $recipeValue = $recipe->inputValue;
-        }
         $value = null;
 
-        if (Support::isClosure($recipeValue)) {
-            $value = $recipeValue($input, $values);
-        } else {
-            $value = $recipeValue;
+        if (! $ignoreRecipeValue) {
+            if (Support::isClosure($recipeValue)) {
+                $value = $recipeValue($input, $values);
+            } else {
+                $value = $recipeValue;
+            }
         }
 
         return $value ?? $defaultValue ?? $modelValue ?? null;
