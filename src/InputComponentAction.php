@@ -68,7 +68,7 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function setModel( ?object $model = null,) : static
+    public function setModel(?object $model = null): static
     {
         $this->model = $model;
 
@@ -140,7 +140,7 @@ final class InputComponentAction implements ActionInterface
 
     public function getValueBag(): DefaultValueBag
     {
-        return new DefaultValueBag(values:$this->values, model: $this->model);
+        return new DefaultValueBag(values: $this->values, model: $this->model);
     }
 
     public function getErrorBag(): DefaultErrorBag

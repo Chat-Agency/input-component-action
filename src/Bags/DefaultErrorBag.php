@@ -1,24 +1,24 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Bags;
 
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
+use ChatAgency\InputComponentAction\Utilities\Support;
 
 class DefaultErrorBag
 {
     public function __construct(
         public readonly array $errors
-    ) 
-    {
-    }
+    ) {}
 
-    public function resolve(InputInterface $input, InputComponentRecipe $recipe = null): ?string
+    public function resolve(InputInterface $input, ?InputComponentRecipe $recipe = null): ?string
     {
-        
+
         $errors = $this->errors;
-        
+
         $name = Support::getName($input);
         $recipe = Support::getRecipe($input);
 
@@ -35,7 +35,7 @@ class DefaultErrorBag
         /**
          * If multiple errors
          */
-        if(is_array($errorDefault )) {
+        if (is_array($errorDefault)) {
             $reversed = array_reverse(array: $errorDefault);
             $errorDefault = array_pop(array: $reversed);
         }

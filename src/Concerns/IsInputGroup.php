@@ -23,11 +23,11 @@ trait IsInputGroup
     private InputInterface $input;
 
     private ThemeManager $themeManager;
-    
+
     private DefaultValueBag $values;
-    
+
     private DefaultErrorBag $errors;
-    
+
     private ?ThemeBag $defaultThemeBag = null;
 
     public function inject(

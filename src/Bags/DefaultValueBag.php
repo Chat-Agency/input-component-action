@@ -1,5 +1,7 @@
 <?php
 
+declare(strict_types=1);
+
 namespace ChatAgency\InputComponentAction\Bags;
 
 use Chatagency\CrudAssistant\Contracts\InputInterface;
@@ -11,26 +13,24 @@ class DefaultValueBag
     public function __construct(
         private array $values,
         private ?object $model,
-    ) 
-    {
-    }
+    ) {}
 
-    public function resolve(InputInterface $input, InputComponentRecipe $recipe = null): ?string
+    public function resolve(InputInterface $input, ?InputComponentRecipe $recipe = null): ?string
     {
         $values = $this->values;
         $model = $this->model;
-        
+
         $name = Support::getName($input);
 
         $defaultValue = $values[$name] ?? null;
         $modelValue = null;
         $recipeValue = null;
 
-        if($model) {
+        if ($model) {
             $modelValue = $model->{$name} ?? null;
         }
 
-        if($recipe) {
+        if ($recipe) {
             $recipeValue = $recipe->inputValue;
         }
         $value = null;

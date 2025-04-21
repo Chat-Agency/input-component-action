@@ -4,19 +4,19 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Composers;
 
-use Closure;
-use ChatAgency\BackendComponents\MainBackendComponent;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputCollectionInterface;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use Closure;
 
 final class InputComposer implements ComponentComposer
 {
@@ -54,7 +54,7 @@ final class InputComposer implements ComponentComposer
         $subComponents = $this->buildInputSubComponents();
 
         /**
-         * Access 
+         * Access
          */
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
@@ -106,7 +106,7 @@ final class InputComposer implements ComponentComposer
         $selectedOrSelected = $name === $value;
 
         if ($recipe->checkable && $selectedOrSelected) {
-            
+
             $component->setAttribute('checked', $selectedOrSelected);
 
         } elseif ($recipe->selectable && $selectedOrSelected) {
