@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Composers;
 
+use Closure;
+use ChatAgency\BackendComponents\MainBackendComponent;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputCollectionInterface;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use Closure;
 
 final class InputComposer implements ComponentComposer
 {
@@ -23,9 +25,9 @@ final class InputComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private ThemeManager $themeManager,
+        private ?DefaultValueBag $values = null,
+        private ?DefaultErrorBag $errors = null,
         private array|Closure|null $defaultInputTheme = [],
-        private ?string $value = null,
-        private ?string $error = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -39,6 +41,7 @@ final class InputComposer implements ComponentComposer
         $recipe = Support::getRecipe($input);
         $inputType = $this->resolveInputType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
+        $valueResolver = $this->values;
 
         /**
          * Init component
@@ -51,14 +54,17 @@ final class InputComposer implements ComponentComposer
         $subComponents = $this->buildInputSubComponents();
 
         /**
-         * Access necessary values
+         * Access 
          */
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
         $callback = $recipe->hookBag?->getInputHook() ?? null;
-        $value = $this->value;
+
+        $value = $valueResolver->resolve($input);
         $name = $this->resolveInputName($input);
         $id = $this->resolveInputId($input);
+
+        // dump($name.' - '.$value);
 
         /**
          * Resolve closures
@@ -89,7 +95,7 @@ final class InputComposer implements ComponentComposer
             $component->setContents($subComponents);
         }
 
-        if (! $recipe->disableInputValue && ! is_null($value)) {
+        if (! $recipe->disableInputValue) {
             $component->setAttribute('value', $value);
         }
 
@@ -100,7 +106,9 @@ final class InputComposer implements ComponentComposer
         $selectedOrSelected = $name === $value;
 
         if ($recipe->checkable && $selectedOrSelected) {
+            
             $component->setAttribute('checked', $selectedOrSelected);
+
         } elseif ($recipe->selectable && $selectedOrSelected) {
             $component->setAttribute('selected', $selectedOrSelected);
         }

@@ -4,17 +4,19 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Composers;
 
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use Closure;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use Closure;
 
 final class LabelComposer implements ComponentComposer
 {
@@ -23,9 +25,9 @@ final class LabelComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private ThemeManager $themeManager,
+        private ?DefaultValueBag $values = null,
+        private ?DefaultErrorBag $errors = null,
         private array|Closure|null $defaultLabelTheme = [],
-        private ?string $value = null,
-        private ?string $error = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent

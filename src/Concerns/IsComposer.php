@@ -22,9 +22,9 @@ trait IsComposer
             input: $input,
             defaultThemeManager: $this->themeManager,
             defaultInputGroup: null,
+            values: $this->values,
+            errors: $this->errors,
             defaultThemeBag: null,
-            value: $this->value,
-            error: $this->error,
         );
 
     }

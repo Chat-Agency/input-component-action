@@ -9,6 +9,8 @@ use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Composers\ErrorComposer;
 use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Composers\LabelComposer;
@@ -21,25 +23,25 @@ trait IsInputGroup
     private InputInterface $input;
 
     private ThemeManager $themeManager;
-
+    
+    private DefaultValueBag $values;
+    
+    private DefaultErrorBag $errors;
+    
     private ?ThemeBag $defaultThemeBag = null;
-
-    private ?string $value = null;
-
-    private ?string $error = null;
 
     public function inject(
         InputInterface $input,
         ThemeManager $themeManager,
+        DefaultValueBag $values,
+        DefaultErrorBag $errors,
         ?ThemeBag $defaultThemeBag = null,
-        ?string $value = null,
-        ?string $error = null,
     ): static {
         $this->input = $input;
         $this->themeManager = $themeManager;
+        $this->values = $values;
+        $this->errors = $errors;
         $this->defaultThemeBag = $defaultThemeBag;
-        $this->value = $value;
-        $this->error = $error;
 
         return $this;
     }
@@ -55,9 +57,9 @@ trait IsInputGroup
         $composer = new WrapperComposer(
             input: $this->input,
             themeManager: $this->themeManager,
+            values: $this->values,
+            errors: $this->errors,
             defaultWrapperTheme: $this->defaultThemeBag?->getWrapperTheme(),
-            value: $this->value,
-            error: $this->error,
         );
 
         return $composer->build();
@@ -74,9 +76,9 @@ trait IsInputGroup
         $composer = new LabelComposer(
             input: $this->input,
             themeManager: $this->themeManager,
+            values: $this->values,
+            errors: $this->errors,
             defaultLabelTheme: $this->defaultThemeBag?->getLabelTheme(),
-            value: $this->value,
-            error: $this->error,
         );
 
         return $composer->build();
@@ -88,9 +90,9 @@ trait IsInputGroup
         $composer = new InputComposer(
             input: $this->input,
             themeManager: $this->themeManager,
+            values: $this->values,
+            errors: $this->errors,
             defaultInputTheme: $this->defaultThemeBag?->getInputTheme(),
-            value: $this->value,
-            error: $this->error,
         );
 
         return $composer->build();
@@ -107,9 +109,9 @@ trait IsInputGroup
         $error = new ErrorComposer(
             input: $this->input,
             themeManager: $this->themeManager,
+            values: $this->values,
+            errors: $this->errors,
             defaultErrorTheme: $this->defaultThemeBag?->getErrorTheme(),
-            value: $this->value,
-            error: $this->error,
         );
 
         return $error->build();

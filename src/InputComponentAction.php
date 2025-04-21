@@ -14,6 +14,8 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
@@ -32,8 +34,9 @@ final class InputComponentAction implements ActionInterface
 
     private ?ThemeBag $defaultThemeBag = null;
 
+    private ?object $model = null;
+
     public function __construct(
-        private ?object $model = null,
         private array $values = [],
         private array $errors = [],
     ) {
@@ -61,6 +64,13 @@ final class InputComponentAction implements ActionInterface
     public function setDefaultThemeBag(ThemeBag $defaultThemeBag): static
     {
         $this->defaultThemeBag = $defaultThemeBag;
+
+        return $this;
+    }
+
+    public function setModel( ?object $model = null,) : static
+    {
+        $this->model = $model;
 
         return $this;
     }
@@ -108,9 +118,9 @@ final class InputComponentAction implements ActionInterface
             input: $input,
             defaultThemeManager: $this->defaultThemeManager,
             defaultInputGroup: $this->defaultInputGroup,
+            values: $this->getValueBag(),
+            errors: $this->getErrorBag(),
             defaultThemeBag: $this->defaultThemeBag,
-            value: $this->getValue($input),
-            error: $this->getError($input),
         );
 
     }
@@ -128,42 +138,13 @@ final class InputComponentAction implements ActionInterface
         return $composer->build();
     }
 
-    public function getValue(InputInterface $input, ?object $model = null): ?string
+    public function getValueBag(): DefaultValueBag
     {
-        /**
-         * @todo Work on model
-         */
-        $name = Support::getName($input);
-        $recipe = Support::getRecipe($input);
-
-        $modelValue = $model->{$name} ?? null;
-
-        $recipeValue = $recipe->inputValue;
-        $value = null;
-
-        if (Support::isClosure($recipeValue)) {
-            $value = $recipeValue($input, $this->values);
-        } else {
-            $value = $recipeValue;
-        }
-
-        return $value ?? $this->values[$name] ?? $modelValue ?? null;
+        return new DefaultValueBag(values:$this->values, model: $this->model);
     }
 
-    public function getError(InputInterface $input): ?string
+    public function getErrorBag(): DefaultErrorBag
     {
-        $name = Support::getName($input);
-        $recipe = Support::getRecipe($input);
-
-        $recipeError = $recipe->inputError;
-        $error = null;
-
-        if (Support::isClosure($recipeError)) {
-            $error = $recipeError($input, $this->errors);
-        } else {
-            $error = $recipeError;
-        }
-
-        return $error ?? $this->errors[$name] ?? null;
+        return new DefaultErrorBag(errors: $this->errors);
     }
 }

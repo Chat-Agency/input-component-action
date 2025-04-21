@@ -13,7 +13,9 @@ use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
@@ -29,7 +31,7 @@ class Support
         return $input->getRecipes()[InputComponentAction::getIdentifier()] ?? new InputComponentRecipe;
     }
 
-    public static function initGroup(InputInterface $input, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?string $value = null, ?string $error = null): BackendComponent
+    public static function initGroup(InputInterface $input, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?DefaultValueBag $values = null, ?DefaultErrorBag $errors = null): BackendComponent
     {
         $recipe = self::getRecipe($input);
 
@@ -39,8 +41,8 @@ class Support
             input: $input,
             themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
             defaultThemeBag: self::resolveThemeBag($recipe, $defaultThemeBag),
-            value: $value,
-            error: $error,
+            values: $values,
+            errors: $errors,
         );
 
         return $group->getGroup();
