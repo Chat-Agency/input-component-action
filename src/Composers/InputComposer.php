@@ -11,10 +11,10 @@ use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputCollectionInterface;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use Closure;
@@ -26,8 +26,8 @@ final class InputComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private ThemeManager $themeManager,
-        private ?DefaultValueBag $values = null,
-        private ?DefaultErrorBag $errors = null,
+        private ?ValueBag $values = null,
+        private ?ErrorBag $errors = null,
         private array|Closure|null $defaultInputTheme = [],
     ) {}
 
@@ -138,7 +138,7 @@ final class InputComposer implements ComponentComposer
         return $components;
     }
 
-    public function addCheckableAndSelectableAttribute(InputInterface $input, InputComponentRecipe $recipe, BackendComponent $component, DefaultValueBag $valueResolver, ?string $value = null): void
+    public function addCheckableAndSelectableAttribute(InputInterface $input, InputComponentRecipe $recipe, BackendComponent $component, ValueBag $valueResolver, ?string $value = null): void
     {
         if ($recipe->checkable || $recipe->selectable) {
 

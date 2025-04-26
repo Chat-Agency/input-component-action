@@ -9,13 +9,13 @@ use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Composers\ErrorComposer;
 use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Composers\LabelComposer;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
 trait IsInputGroup
@@ -24,9 +24,9 @@ trait IsInputGroup
 
     private ThemeManager $themeManager;
 
-    private DefaultValueBag $values;
+    private ValueBag $values;
 
-    private DefaultErrorBag $errors;
+    private ErrorBag $errors;
 
     private ?ThemeBag $defaultThemeBag = null;
 
@@ -35,8 +35,8 @@ trait IsInputGroup
     public function inject(
         InputInterface $input,
         ThemeManager $themeManager,
-        DefaultValueBag $values,
-        DefaultErrorBag $errors,
+        ValueBag $values,
+        ErrorBag $errors,
         ?ThemeBag $defaultThemeBag = null,
     ): static {
         $this->input = $input;

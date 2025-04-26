@@ -13,16 +13,15 @@ use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use Closure;
-use Exception;
 
 class Support
 {
@@ -31,7 +30,7 @@ class Support
         return $input->getRecipes()[InputComponentAction::getIdentifier()] ?? new InputComponentRecipe;
     }
 
-    public static function initGroup(InputInterface $input, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?DefaultValueBag $values = null, ?DefaultErrorBag $errors = null, ?InputInterface $parent = null): BackendComponent
+    public static function initGroup(InputInterface $input, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?ValueBag $values = null, ?ErrorBag $errors = null, ?InputInterface $parent = null): BackendComponent
     {
         $recipe = self::getRecipe($input);
 
@@ -86,19 +85,5 @@ class Support
     public static function getCollectionWrapper(): BackendComponent|ContentComponent
     {
         return ComponentBuilder::make(ComponentEnum::COLLECTION);
-    }
-
-    /**
-     * @throws Exception
-     */
-    public static function getName(InputInterface $input): string
-    {
-        $name = $input->getName();
-
-        if (! $name) {
-            throw new Exception('All inputs and collections must have name', 500);
-        }
-
-        return $name;
     }
 }

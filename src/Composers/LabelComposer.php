@@ -10,11 +10,11 @@ use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use Closure;
 
@@ -25,15 +25,15 @@ final class LabelComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private ThemeManager $themeManager,
-        private ?DefaultValueBag $values = null,
-        private ?DefaultErrorBag $errors = null,
+        private ?ValueBag $values = null,
+        private ?ErrorBag $errors = null,
         private array|Closure|null $defaultLabelTheme = [],
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
         $input = $this->input;
-        $name = Support::getName($input);
+        $name = $input->getName();
         $recipe = Support::getRecipe($input);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 

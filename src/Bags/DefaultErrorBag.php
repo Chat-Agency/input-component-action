@@ -5,22 +5,27 @@ declare(strict_types=1);
 namespace ChatAgency\InputComponentAction\Bags;
 
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
-class DefaultErrorBag
+final class DefaultErrorBag implements ErrorBag
 {
-    public function __construct(
-        public readonly array $errors
-    ) {}
+    private ?array $errors = [];
 
-    public function resolve(InputInterface $input, ?InputComponentRecipe $recipe = null): ?string
+    public function setErrors(array $errors): static
+    {
+        $this->errors = $errors;
+
+        return $this;
+    }
+
+    public function resolve(InputInterface $input, InputComponentRecipe $recipe): ?string
     {
 
         $errors = $this->errors;
 
-        $name = Support::getName($input);
-        $recipe = Support::getRecipe($input);
+        $name = $input->getName();
 
         $recipeError = $recipe->inputError;
         $errorDefault = $errors[$name] ?? null;

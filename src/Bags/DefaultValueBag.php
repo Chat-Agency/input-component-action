@@ -5,30 +5,42 @@ declare(strict_types=1);
 namespace ChatAgency\InputComponentAction\Bags;
 
 use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
-class DefaultValueBag
+final class DefaultValueBag implements ValueBag
 {
-    public function __construct(
-        private array $values,
-        private ?object $model,
-    ) {}
+    private ?array $values = [];
+
+    private ?object $model = null;
+
+    public function setValues(array $values): static
+    {
+        $this->values = $values;
+
+        return $this;
+    }
+
+    public function setModel(?object $model): static
+    {
+        $this->model = $model;
+
+        return $this;
+    }
 
     public function resolve(InputInterface $input, InputComponentRecipe $recipe, bool $ignoreRecipeValue = false): ?string
     {
         $values = $this->values;
         $model = $this->model;
 
-        $name = Support::getName($input);
+        $name = $input->getName();
 
         $defaultValue = $values[$name] ?? null;
         $recipeValue = $recipe->inputValue;
         $modelValue = null;
 
-        if ($model) {
-            $modelValue = $model->{$name} ?? null;
-        }
+        $modelValue = $model?->{$name} ?? null;
 
         $value = null;
 

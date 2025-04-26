@@ -18,8 +18,10 @@ use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
 use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class InputComponentAction implements ActionInterface
@@ -35,6 +37,10 @@ final class InputComponentAction implements ActionInterface
     private ?ThemeBag $defaultThemeBag = null;
 
     private ?object $model = null;
+
+    private ?ValueBag $valueBag = null;
+
+    private ?ErrorBag $errorBag = null;
 
     public function __construct(
         private array $values = [],
@@ -79,7 +85,7 @@ final class InputComponentAction implements ActionInterface
     {
         $inputs = $this->output->inputs;
 
-        $name = Support::getName($input);
+        $name = $input->getName();
 
         $inputs->set($name, $this->resolveInputs($input));
 
@@ -138,13 +144,18 @@ final class InputComponentAction implements ActionInterface
         return $composer->build();
     }
 
-    public function getValueBag(): DefaultValueBag
+    public function getValueBag(): ValueBag
     {
-        return new DefaultValueBag(values: $this->values, model: $this->model);
+        $bag = $this->valueBag ?? new DefaultValueBag;
+
+        return $bag->setValues($this->values)
+            ->setModel($this->model);
     }
 
-    public function getErrorBag(): DefaultErrorBag
+    public function getErrorBag(): ErrorBag
     {
-        return new DefaultErrorBag(errors: $this->errors);
+        $bag = $this->errorBag ?? new DefaultErrorBag;
+
+        return $bag->setErrors($this->errors);
     }
 }

@@ -8,16 +8,14 @@ use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 
 interface InputGroup
 {
     public function inject(
         InputInterface $input,
         ThemeManager $themeManager,
-        DefaultValueBag $values,
-        DefaultErrorBag $errors,
+        ValueBag $values,
+        ErrorBag $errors,
         ?ThemeBag $defaultThemeBag = null,
     ): static;
 

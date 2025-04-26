@@ -58,7 +58,7 @@ trait IsComposer
         $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
-        return $attributes['name'] ?? Support::getName($input);
+        return $attributes['name'] ?? $name = $input->getName();
     }
 
     public static function resolveInputId(InputInterface $input, ?array $attributes = null): ?string
@@ -66,7 +66,7 @@ trait IsComposer
         $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
-        return $attributes['id'] ?? Support::getName($input);
+        return $attributes['id'] ?? $name = $input->getName();
     }
 
     public function resolveWrapperType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
