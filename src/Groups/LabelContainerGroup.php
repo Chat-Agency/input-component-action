@@ -9,8 +9,9 @@ use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Concerns\IsInputGroup;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Utilities\Support;
+use Exception;
 
-final class InputLabelErrorGroup implements InputGroup
+class LabelContainerGroup implements InputGroup
 {
     use IsInputGroup;
 
@@ -21,18 +22,19 @@ final class InputLabelErrorGroup implements InputGroup
         $input = $this->getInputComponent();
         $error = $this->getErrorComponent();
 
+        if (! $label) {
+            throw new Exception('The label is mandatory to use this group', 500);
+        }
+
         $components = [];
 
-        $components['input'] = $input;
-
-        if ($label) {
-            $components['label'] = $label;
-        }
+        $components['label'] = $label->setContent(content: $input, key: 'input');
 
         if ($error) {
             $components['error'] = $error;
         }
 
         return $wrapper->setContents($components);
+
     }
 }

@@ -32,6 +32,7 @@ final class InputComponentRecipe implements RecipeInterface
 
         public readonly string|Closure|null $label = null,
         public readonly bool $labelAsInputContent = false,
+        public readonly bool $emptyLabel = false,
 
         public readonly ?ComponentEnum $wrapperType = null,
         public readonly ?ComponentEnum $inputType = null,

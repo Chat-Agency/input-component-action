@@ -24,13 +24,13 @@ final class DefaultInputGroup implements InputGroup
         $components = [];
 
         if ($label) {
-            $components[] = $label;
+            $components['label'] = $label;
         }
 
-        $components[] = $input;
+        $components['input'] = $input;
 
         if ($error) {
-            $components[] = $error;
+            $components['error'] = $error;
         }
 
         return $wrapper->setContents($components);

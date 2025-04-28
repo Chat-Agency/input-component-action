@@ -50,7 +50,9 @@ final class LabelComposer implements ComponentComposer
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $themes = Support::resolveArrayClosure(value: $theme, input: $input, type: $inputType);
 
-        $component->setContent($label);
+        if (! $recipe->emptyLabel) {
+            $component->setContent($label);
+        }
 
         if (! $recipe->disableDefaultForAttribute) {
             $component->setAttribute('for', $name);
