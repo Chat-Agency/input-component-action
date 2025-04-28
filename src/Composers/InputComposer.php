@@ -4,20 +4,21 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Composers;
 
+use Closure;
+use ChatAgency\BackendComponents\MainBackendComponent;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputCollectionInterface;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use Closure;
 
 final class InputComposer implements ComponentComposer
 {
@@ -28,7 +29,7 @@ final class InputComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
-        private array|Closure|null $defaultInputTheme = [],
+        private ?ThemeBag $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -58,7 +59,7 @@ final class InputComposer implements ComponentComposer
          * Access
          */
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
-        $theme = $recipe->themeBag?->getInputTheme() ?? $this->defaultInputTheme;
+        $theme = $recipe->themeBag?->getInputTheme() ?? $this->themeBag?->getInputTheme();
         $callback = $recipe->hookBag?->getInputHook() ?? null;
 
         $value = $valueResolver->resolve($input, $recipe);
@@ -69,7 +70,7 @@ final class InputComposer implements ComponentComposer
          * Resolve closures
          */
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
-        $theme = Support::resolveArrayClosure($theme, input: $input, type: $inputType);
+        $theme = Support::resolveArrayClosure(value: $theme, input: $input, type: $inputType);
 
         /**
          * Default attributes
