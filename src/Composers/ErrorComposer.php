@@ -14,9 +14,9 @@ use Chatagency\CrudAssistant\DataContainer;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Utilities\Support;
-use Closure;
 
 final class ErrorComposer implements ComponentComposer
 {
@@ -27,7 +27,7 @@ final class ErrorComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
-        private array|Closure|null $defaultErrorTheme = [],
+        private ?ThemeBag $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -41,8 +41,8 @@ final class ErrorComposer implements ComponentComposer
 
         $component = new MainBackendComponent($componentType, $themeManager);
 
-        $theme = $recipe->themeBag?->getErrorTheme() ?? $this->defaultErrorTheme;
-        $themes = Support::resolveArrayClosure(value: $theme ?? $this->defaultErrorTheme, input: $input, type: $componentType);
+        $theme = $recipe->themeBag?->getErrorTheme() ?? $this->themeBag?->getErrorTheme();
+        $themes = Support::resolveArrayClosure(value: $theme, input: $input, type: $componentType);
 
         $error = $errorResolver->resolve($input, $recipe);
         if ($error) {

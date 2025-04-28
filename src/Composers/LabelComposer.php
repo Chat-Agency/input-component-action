@@ -14,9 +14,9 @@ use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Utilities\Support;
-use Closure;
 
 final class LabelComposer implements ComponentComposer
 {
@@ -27,7 +27,7 @@ final class LabelComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
-        private array|Closure|null $defaultLabelTheme = [],
+        private ?ThemeBag $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -45,10 +45,10 @@ final class LabelComposer implements ComponentComposer
         $inputType = $this->resolveInputType($recipe);
 
         $attributes = $recipe->attributeBag?->getLabelAttributes();
-        $theme = $recipe->themeBag?->getLabelTheme() ?? $this->defaultLabelTheme;
+        $theme = $recipe->themeBag?->getLabelTheme() ?? $this->themeBag?->getLabelTheme();
 
         $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
-        $themes = Support::resolveArrayClosure(value: $theme ?? $this->defaultLabelTheme, input: $input, type: $inputType);
+        $themes = Support::resolveArrayClosure(value: $theme, input: $input, type: $inputType);
 
         $component->setContent($label);
 

@@ -68,7 +68,7 @@ trait IsInputGroup
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,
-            defaultWrapperTheme: $this->defaultThemeBag?->getWrapperTheme(),
+            themeBag: $this->defaultThemeBag,
         );
 
         if ($this->parent) {
@@ -91,7 +91,7 @@ trait IsInputGroup
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,
-            defaultLabelTheme: $this->defaultThemeBag?->getLabelTheme(),
+            themeBag: $this->defaultThemeBag,
         );
 
         if ($this->parent) {
@@ -109,7 +109,7 @@ trait IsInputGroup
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,
-            defaultInputTheme: $this->defaultThemeBag?->getInputTheme(),
+            themeBag: $this->defaultThemeBag,
         );
 
         if ($this->parent) {
@@ -132,7 +132,7 @@ trait IsInputGroup
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,
-            defaultErrorTheme: $this->defaultThemeBag?->getErrorTheme(),
+            themeBag: $this->defaultThemeBag,
         );
 
         if ($this->parent) {
