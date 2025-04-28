@@ -138,7 +138,7 @@ final class InputComponentAction implements ActionInterface
         $composer = new WrapperComposer(
             input: $input,
             themeManager: Support::resolveThemeManager($recipe, defaultThemeManager: $this->defaultThemeManager),
-            defaultWrapperTheme: $this->defaultThemeBag->getWrapperTheme(),
+            themeBag: $this->defaultThemeBag,
         );
 
         return $composer->build();

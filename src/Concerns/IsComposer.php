@@ -26,7 +26,7 @@ trait IsComposer
             defaultInputGroup: null,
             values: $this->values,
             errors: $this->errors,
-            defaultThemeBag: null,
+            defaultThemeBag: $this->themeBag,
             parent: $parent,
         );
 
