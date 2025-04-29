@@ -16,9 +16,16 @@ use Closure;
 
 trait IsComposer
 {
-    protected ?InputInterface $parent = null;
+    private ?InputInterface $parent = null;
 
-    public function resolveGroup(InputInterface $input, ?InputInterface $parent = null): BackendComponent
+    public function setParent(InputInterface $parent): static
+    {
+        $this->parent = $parent;
+
+        return $this;
+    }
+
+    private function resolveGroup(InputInterface $input, ?InputInterface $parent = null): BackendComponent
     {
         return Support::initGroup(
             input: $input,
@@ -32,14 +39,7 @@ trait IsComposer
 
     }
 
-    public function setParent(InputInterface $parent): static
-    {
-        $this->parent = $parent;
-
-        return $this;
-    }
-
-    public static function resolveLabel(InputInterface $input, ?string $value = null, ?string $error = null): string
+    private static function resolveLabel(InputInterface $input, ?string $value = null, ?string $error = null): string
     {
         $recipe = Support::getRecipe($input);
 
@@ -53,7 +53,7 @@ trait IsComposer
         return $recipeLabel ?? $input->getLabel();
     }
 
-    public static function resolveInputName(InputInterface $input, ?array $attributes = null): ?string
+    private static function resolveInputName(InputInterface $input, ?array $attributes = null): ?string
     {
         $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
@@ -61,7 +61,7 @@ trait IsComposer
         return $attributes['name'] ?? $name = $input->getName();
     }
 
-    public static function resolveInputId(InputInterface $input, ?array $attributes = null): ?string
+    private static function resolveInputId(InputInterface $input, ?array $attributes = null): ?string
     {
         $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
@@ -69,27 +69,27 @@ trait IsComposer
         return $attributes['id'] ?? $name = $input->getName();
     }
 
-    public function resolveWrapperType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
+    private function resolveWrapperType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
     {
         return $recipe->wrapperType ?? ComponentEnum::DIV;
     }
 
-    public function resolveLabelType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
+    private function resolveLabelType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
     {
         return $recipe->labelType ?? ComponentEnum::LABEL;
     }
 
-    public function resolveInputType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
+    private function resolveInputType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum
     {
         return $recipe->inputType ?? ComponentEnum::TEXT_INPUT;
     }
 
-    public function resolveErrorType(?InputComponentRecipe $recipe): string|ComponentEnum
+    private function resolveErrorType(?InputComponentRecipe $recipe): string|ComponentEnum
     {
         return $recipe->errorType ?? ComponentEnum::PARAGRAPH;
     }
 
-    public function resolveComponentHook(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent
+    private function resolveComponentHook(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent
     {
         if (Support::isClosure($closure)) {
             /** @var array $closure */
