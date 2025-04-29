@@ -64,5 +64,11 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $checkable = false,
         public readonly bool $selectable = false,
 
+        /**
+         * Help text
+         */
+        public readonly string|Closure|null $helpText = null,
+        public readonly string|Closure|null $helpTextType = null,
+
     ) {}
 }

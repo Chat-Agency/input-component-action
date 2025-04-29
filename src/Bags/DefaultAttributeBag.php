@@ -7,7 +7,7 @@ namespace ChatAgency\InputComponentAction\Bags;
 use ChatAgency\InputComponentAction\Concerns\IsAttributeBag;
 use ChatAgency\InputComponentAction\Contracts\AttributeBag;
 
-class DefaultAttributeBag implements AttributeBag
+final class DefaultAttributeBag implements AttributeBag
 {
     use IsAttributeBag;
 }

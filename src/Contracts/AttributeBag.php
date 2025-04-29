@@ -16,6 +16,8 @@ interface AttributeBag
 
     public function setErrorAttributes(Closure|array $errorAttributes): static;
 
+    public function setHelpTextAttributes(Closure|array $errorAttributes): static;
+
     public function getWrapperAttributes(): Closure|array|null;
 
     public function getInputAttributes(): Closure|array|null;
@@ -23,4 +25,6 @@ interface AttributeBag
     public function getLabelAttributes(): Closure|array|null;
 
     public function getErrorAttributes(): Closure|array|null;
+
+    public function getHelpTextAttributes(): Closure|array|null;
 }

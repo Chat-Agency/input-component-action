@@ -23,7 +23,7 @@ use ChatAgency\InputComponentAction\InputComponentAction;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use Closure;
 
-class Support
+final class Support
 {
     public static function getRecipe(InputInterface $input): InputComponentRecipe
     {

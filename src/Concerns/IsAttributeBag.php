@@ -16,6 +16,8 @@ trait IsAttributeBag
 
     private Closure|array|null $errorAttributes = null;
 
+    private Closure|array|null $helpText = null;
+
     public function setWrapperAttributes(Closure|array $wrapperAttributes): static
     {
         $this->wrapperAttributes = $wrapperAttributes;
@@ -44,6 +46,13 @@ trait IsAttributeBag
         return $this;
     }
 
+    public function setHelpTextAttributes(Closure|array $helpText): static
+    {
+        $this->helpText = $helpText;
+
+        return $this;
+    }
+
     public function getWrapperAttributes(): Closure|array|null
     {
         return $this->wrapperAttributes;
@@ -62,5 +71,10 @@ trait IsAttributeBag
     public function getErrorAttributes(): Closure|array|null
     {
         return $this->errorAttributes;
+    }
+
+    public function getHelpTextAttributes(): Closure|array|null
+    {
+        return $this->helpText;
     }
 }
