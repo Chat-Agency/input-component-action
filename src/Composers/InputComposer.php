@@ -27,8 +27,8 @@ final class InputComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
-        private ThemeManager $themeManager,
         private InputGroup $defaultInputGroup,
+        private ThemeManager $themeManager,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
         private ?ThemeBag $themeBag = null,
@@ -136,7 +136,7 @@ final class InputComposer implements ComponentComposer
 
         foreach ($subElements->getInputs() as $element) {
             $elementRecipe = Support::getRecipe($element);
-            $components[] = $this->resolveGroup($element, $elementRecipe, $input);
+            $components[] = $this->resolveGroup($element, $elementRecipe, $this->defaultInputGroup, $input);
         }
 
         return $components;

@@ -67,6 +67,7 @@ trait IsInputGroup
             input: $this->input,
             recipe: $this->recipe,
             themeManager: $this->themeManager,
+            defaultInputGroup: $this->defaultInputGroup,
             values: $this->values,
             errors: $this->errors,
             themeBag: $this->defaultThemeBag,

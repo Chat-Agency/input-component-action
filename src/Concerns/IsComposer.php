@@ -10,6 +10,7 @@ use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use Closure;
@@ -25,13 +26,13 @@ trait IsComposer
         return $this;
     }
 
-    private function resolveGroup(InputInterface $input, InputComponentRecipe $recipe, ?InputInterface $parent = null): BackendComponent
+    private function resolveGroup(InputInterface $input, InputComponentRecipe $recipe, InputGroup $defaultInputGroup, ?InputInterface $parent = null): BackendComponent
     {
         return Support::initGroup(
             input: $input,
             recipe: $recipe,
             defaultThemeManager: $this->themeManager,
-            defaultInputGroup: null,
+            defaultInputGroup: $defaultInputGroup,
             values: $this->values,
             errors: $this->errors,
             defaultThemeBag: $this->themeBag,
