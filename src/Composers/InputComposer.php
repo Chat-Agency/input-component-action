@@ -133,8 +133,8 @@ final class InputComposer implements ComponentComposer
         }
 
         foreach ($subElements->getInputs() as $element) {
-            $elementREcipe = Support::getRecipe($element);
-            $components[] = $this->resolveGroup($element, $elementREcipe, $input);
+            $elementRecipe = Support::getRecipe($element);
+            $components[] = $this->resolveGroup($element, $elementRecipe, $input);
         }
 
         return $components;
