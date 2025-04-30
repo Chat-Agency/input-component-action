@@ -14,6 +14,8 @@ interface ThemeBag
 
     public function setLabelTheme(Closure|array $labelTheme): static;
 
+    public function setHelpTextTheme(Closure|array $helpText): static;
+
     public function setErrorTheme(Closure|array $errorTheme): static;
 
     public function getWrapperTheme(): Closure|array|null;
@@ -21,6 +23,8 @@ interface ThemeBag
     public function getInputTheme(): Closure|array|null;
 
     public function getLabelTheme(): Closure|array|null;
+
+    public function getHelpTextTheme(): Closure|array|null;
 
     public function getErrorTheme(): Closure|array|null;
 }

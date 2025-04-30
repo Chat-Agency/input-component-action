@@ -4,7 +4,6 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Utilities;
 
-use BackedEnum;
 use ChatAgency\BackendComponents\Builders\ComponentBuilder;
 use ChatAgency\BackendComponents\Contracts\BackendComponent;
 use ChatAgency\BackendComponents\Contracts\ContentComponent;
@@ -30,14 +29,13 @@ final class Support
         return $input->getRecipes()[InputComponentAction::getIdentifier()] ?? new InputComponentRecipe;
     }
 
-    public static function initGroup(InputInterface $input, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?ValueBag $values = null, ?ErrorBag $errors = null, ?InputInterface $parent = null): BackendComponent
+    public static function initGroup(InputInterface $input, InputComponentRecipe $recipe, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?ValueBag $values = null, ?ErrorBag $errors = null, ?InputInterface $parent = null): BackendComponent
     {
-        $recipe = self::getRecipe($input);
-
         $group = $recipe->inputGroup ?? $defaultInputGroup ?? new DefaultInputGroup;
 
         $group = $group->inject(
             input: $input,
+            recipe: $recipe,
             themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
             values: $values,
             errors: $errors,
@@ -61,20 +59,6 @@ final class Support
     private static function resolveThemeBag(RecipeInterface $recipe, ?ThemeBag $defaultThemeBag = null): ThemeBag
     {
         return $recipe->defaultThemeBag ?? $defaultThemeBag ?? new DefaultThemeBag;
-    }
-
-    public static function resolveArrayClosure(array|Closure|null $value, InputInterface $input, BackedEnum $type): ?array
-    {
-        if ($input == null) {
-            return null;
-        }
-
-        if (self::isClosure($value)) {
-            /** @var array $value */
-            return $value($input, $type);
-        }
-
-        return $value;
     }
 
     public static function isClosure(mixed $value): bool

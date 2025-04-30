@@ -25,6 +25,7 @@ final class InputComposer implements ComponentComposer
 
     public function __construct(
         private InputInterface $input,
+        private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
@@ -39,7 +40,7 @@ final class InputComposer implements ComponentComposer
     public function buildInputComponent(InputInterface|InputCollectionInterface $input): BackendComponent|ContentComponent
     {
 
-        $recipe = Support::getRecipe($input);
+        $recipe = $this->recipe;
         $inputType = $this->resolveInputType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
         $valueResolver = $this->values;
@@ -52,7 +53,7 @@ final class InputComposer implements ComponentComposer
         /**
          * SubComponents
          */
-        $subComponents = $this->buildSubComponentGroup();
+        $subComponents = $this->buildSubComponentGroup($recipe);
 
         /**
          * Access
@@ -62,14 +63,14 @@ final class InputComposer implements ComponentComposer
         $callback = $recipe->hookBag?->getInputHook() ?? null;
 
         $value = $valueResolver->resolve($input, $recipe);
-        $name = $this->resolveInputName($input);
-        $id = $this->resolveInputId($input);
+        $name = $this->resolveInputName($input, $recipe);
+        $id = $this->resolveInputId($input, $recipe);
 
         /**
          * Resolve closures
          */
-        $attributes = Support::resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
-        $theme = Support::resolveArrayClosure(value: $theme, input: $input, type: $inputType);
+        $attributes = $this->resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
+        $theme = $this->resolveArrayClosure(value: $theme, input: $input, type: $inputType);
 
         /**
          * Default attributes
@@ -120,7 +121,7 @@ final class InputComposer implements ComponentComposer
         return $component;
     }
 
-    public function buildSubComponentGroup(): ?array
+    public function buildSubComponentGroup(InputComponentRecipe $recipe): ?array
     {
         $input = $this->input;
 
@@ -132,7 +133,8 @@ final class InputComposer implements ComponentComposer
         }
 
         foreach ($subElements->getInputs() as $element) {
-            $components[] = $this->resolveGroup($element, $input);
+            $elementREcipe = Support::getRecipe($element);
+            $components[] = $this->resolveGroup($element, $elementREcipe, $input);
         }
 
         return $components;

@@ -25,10 +25,11 @@ trait IsComposer
         return $this;
     }
 
-    private function resolveGroup(InputInterface $input, ?InputInterface $parent = null): BackendComponent
+    private function resolveGroup(InputInterface $input, InputComponentRecipe $recipe, ?InputInterface $parent = null): BackendComponent
     {
         return Support::initGroup(
             input: $input,
+            recipe: $recipe,
             defaultThemeManager: $this->themeManager,
             defaultInputGroup: null,
             values: $this->values,
@@ -39,34 +40,40 @@ trait IsComposer
 
     }
 
-    private static function resolveLabel(InputInterface $input, ?string $value = null, ?string $error = null): string
+    private static function resolveStringClosure(InputInterface $input, string|Closure|null $stringClosure, ?string $value = null, ?string $error = null): string
     {
-        $recipe = Support::getRecipe($input);
-
-        $recipeLabel = $recipe->label;
-
-        if (Support::isClosure($recipeLabel)) {
-            /** @var string $recipeLabel */
-            $recipeLabel = $recipeLabel($input, $value, $error);
+        if (Support::isClosure($stringClosure)) {
+            $stringClosure = $stringClosure($input, $value, $error);
         }
 
-        return $recipeLabel ?? $input->getLabel();
+        return $stringClosure;
     }
 
-    private static function resolveInputName(InputInterface $input, ?array $attributes = null): ?string
+    private static function resolveArrayClosure(array|Closure|null $value, InputInterface $input, BackedEnum $type): ?array
     {
-        $recipe = Support::getRecipe($input);
-        $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
+        if ($input == null) {
+            return null;
+        }
 
-        return $attributes['name'] ?? $name = $input->getName();
+        if (Support::isClosure($value)) {
+            return $value($input, $type);
+        }
+
+        return $value;
     }
 
-    private static function resolveInputId(InputInterface $input, ?array $attributes = null): ?string
+    private static function resolveInputName(InputInterface $input, InputComponentRecipe $recipe, ?array $attributes = null): ?string
     {
-        $recipe = Support::getRecipe($input);
         $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
 
-        return $attributes['id'] ?? $name = $input->getName();
+        return $attributes['name'] ?? $input->getName();
+    }
+
+    private static function resolveInputId(InputInterface $input, InputComponentRecipe $recipe, ?array $attributes = null): ?string
+    {
+        $attributes ??= $recipe->attributeBag?->getInputAttributes() ?? null;
+
+        return $attributes['id'] ?? $input->getName();
     }
 
     private function resolveWrapperType(InputComponentRecipe|RecipeInterface|null $recipe): string|ComponentEnum

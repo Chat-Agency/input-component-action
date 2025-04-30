@@ -4,19 +4,20 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Composers;
 
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use Chatagency\CrudAssistant\DataContainer;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use Chatagency\CrudAssistant\DataContainer;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
-use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Utilities\Support;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
-use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class ErrorComposer implements ComponentComposer
 {
@@ -24,6 +25,7 @@ final class ErrorComposer implements ComponentComposer
 
     public function __construct(
         private InputInterface $input,
+        private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
@@ -42,7 +44,7 @@ final class ErrorComposer implements ComponentComposer
         $component = new MainBackendComponent($componentType, $themeManager);
 
         $theme = $recipe->themeBag?->getErrorTheme() ?? $this->themeBag?->getErrorTheme();
-        $themes = Support::resolveArrayClosure(value: $theme, input: $input, type: $componentType);
+        $themes = $this->resolveArrayClosure(value: $theme, input: $input, type: $componentType);
 
         $error = $errorResolver->resolve($input, $recipe);
         if ($error) {

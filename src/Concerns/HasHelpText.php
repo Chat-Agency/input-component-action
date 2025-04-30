@@ -22,6 +22,7 @@ trait HasHelpText
 
         $composer = new HelpTextComposer(
             input: $this->input,
+            recipe: $this->recipe,
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,

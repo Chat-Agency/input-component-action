@@ -9,9 +9,11 @@ use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Concerns\IsRecipe;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\Contracts\AttributeBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\HookBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use Closure;
 
@@ -34,10 +36,13 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $labelAsInputContent = false,
         public readonly bool $emptyLabel = false,
 
+        public readonly string|Closure|null $helpText = null,
+
         public readonly ?ComponentEnum $wrapperType = null,
         public readonly ?ComponentEnum $inputType = null,
         public readonly ?ComponentEnum $labelType = null,
         public readonly ?ComponentEnum $errorType = null,
+        public readonly ?ComponentEnum $helpTextType = null,
 
         public readonly ?ThemeManager $themeManager = null,
 
@@ -48,6 +53,7 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $disableWrapper = false,
         public readonly bool $disableLabel = false,
         public readonly bool $disableError = false,
+        public readonly bool $disableHelpText = false,
 
         /**
          * Disable attributes created
@@ -64,11 +70,8 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $checkable = false,
         public readonly bool $selectable = false,
 
-        /**
-         * Help text
-         */
-        public readonly string|Closure|null $helpText = null,
-        public readonly string|Closure|null $helpTextType = null,
+        public readonly ?ValueBag $valueBag = null,
+        public readonly ?ErrorBag $errorBag = null,
 
     ) {}
 }

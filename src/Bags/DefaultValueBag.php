@@ -29,7 +29,7 @@ final class DefaultValueBag implements ValueBag
         return $this;
     }
 
-    public function resolve(InputInterface $input, InputComponentRecipe $recipe, bool $ignoreRecipeValue = false): ?string
+    public function resolve(InputInterface $input, InputComponentRecipe $recipe, bool $ignoreRecipeValue = false): string|int|array|null
     {
         $values = $this->values;
         $model = $this->model;

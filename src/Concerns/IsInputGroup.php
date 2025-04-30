@@ -13,10 +13,14 @@ use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
+use Orchestra\Workbench\Contracts\Recipe;
 
 trait IsInputGroup
 {
     private InputInterface $input;
+
+    private InputComponentRecipe $recipe;
 
     private ThemeManager $themeManager;
 
@@ -30,12 +34,14 @@ trait IsInputGroup
 
     public function inject(
         InputInterface $input,
+        InputComponentRecipe $recipe,
         ThemeManager $themeManager,
         ValueBag $values,
         ErrorBag $errors,
         ?ThemeBag $defaultThemeBag = null,
     ): static {
         $this->input = $input;
+        $this->recipe = $recipe;
         $this->themeManager = $themeManager;
         $this->values = $values;
         $this->errors = $errors;
@@ -55,6 +61,7 @@ trait IsInputGroup
     {
         $composer = new InputComposer(
             input: $this->input,
+            recipe: $this->recipe,
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,

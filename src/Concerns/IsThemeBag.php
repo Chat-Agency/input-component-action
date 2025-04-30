@@ -14,6 +14,8 @@ trait IsThemeBag
 
     private Closure|array|null $labelTheme = null;
 
+    private Closure|array|null $helpTextTheme = null;
+
     private Closure|array|null $errorTheme = null;
 
     public function setWrapperTheme(Closure|array $wrapperTheme): static
@@ -33,6 +35,13 @@ trait IsThemeBag
     public function setLabelTheme(Closure|array $labelTheme): static
     {
         $this->labelTheme = $labelTheme;
+
+        return $this;
+    }
+
+    public function setHelpTextTheme(Closure|array $helpTextTheme): static
+    {
+        $this->helpTextTheme = $helpTextTheme;
 
         return $this;
     }
@@ -57,6 +66,11 @@ trait IsThemeBag
     public function getLabelTheme(): Closure|array|null
     {
         return $this->labelTheme;
+    }
+
+    public function getHelpTextTheme(): Closure|array|null
+    {
+        return $this->helpTextTheme;
     }
 
     public function getErrorTheme(): Closure|array|null

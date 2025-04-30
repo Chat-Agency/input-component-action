@@ -16,6 +16,8 @@ trait IsHookBag
 
     private ?Closure $errorHook = null;
 
+    private ?Closure $helpTextHook = null;
+
     public function setWrapperHook(Closure $wrapperHook): static
     {
         $this->wrapperHook = $wrapperHook;
@@ -44,6 +46,13 @@ trait IsHookBag
         return $this;
     }
 
+    public function setHelpTextHook(Closure $helpTextHook): static
+    {
+        $this->helpTextHook = $helpTextHook;
+
+        return $this;
+    }
+
     public function getWrapperHook(): ?Closure
     {
         return $this->wrapperHook;
@@ -62,5 +71,10 @@ trait IsHookBag
     public function getErrorHook(): ?Closure
     {
         return $this->errorHook;
+    }
+
+    public function getHelpTextHook(): ?Closure
+    {
+        return $this->helpTextHook;
     }
 }

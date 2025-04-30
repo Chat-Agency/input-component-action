@@ -4,25 +4,27 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use Chatagency\CrudAssistant\Concerns\IsAction;
-use Chatagency\CrudAssistant\Contracts\ActionInterface;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
+use Exception;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
-use ChatAgency\InputComponentAction\Composers\WrapperComposer;
-use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use Chatagency\CrudAssistant\Concerns\IsAction;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use Chatagency\CrudAssistant\Contracts\ActionInterface;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
-use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
-use ChatAgency\InputComponentAction\Utilities\Support;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
+use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\InputComponentAction\Composers\WrapperComposer;
+use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class InputComponentAction implements ActionInterface
 {
@@ -87,6 +89,10 @@ final class InputComponentAction implements ActionInterface
 
         $name = $input->getName();
 
+        if (! $name) {
+            throw new Exception('The Input '.$input::class.' must have a name', 500);
+        }
+
         $inputs->set($name, $this->resolveInputs($input));
 
         return $this->output;
@@ -108,9 +114,11 @@ final class InputComponentAction implements ActionInterface
             return $wrapper;
         }
 
+        $inputGroup = $this->getInputGroup($input);
+
         /** Modifiers on the whole input group component */
         $component = $this->modifiers(
-            value: $this->getGroup($input),
+            value: $inputGroup,
             input: $input,
         );
 
@@ -118,14 +126,17 @@ final class InputComponentAction implements ActionInterface
 
     }
 
-    public function getGroup(InputInterface $input): BackendComponent
+    public function getInputGroup(InputInterface $input): BackendComponent
     {
+        $recipe = Support::getRecipe($input);
+        
         return Support::initGroup(
             input: $input,
+            recipe: $recipe,
             defaultThemeManager: $this->defaultThemeManager,
             defaultInputGroup: $this->defaultInputGroup,
-            values: $this->getValueBag(),
-            errors: $this->getErrorBag(),
+            values: $this->getValueBag($recipe),
+            errors: $this->getErrorBag($recipe),
             defaultThemeBag: $this->defaultThemeBag,
         );
 
@@ -144,17 +155,17 @@ final class InputComponentAction implements ActionInterface
         return $composer->build();
     }
 
-    public function getValueBag(): ValueBag
+    public function getValueBag(?InputComponentRecipe $recipe): ValueBag
     {
-        $bag = $this->valueBag ?? new DefaultValueBag;
+        $bag = $recipe->valueBag ?? $this->valueBag ?? new DefaultValueBag;
 
         return $bag->setValues($this->values)
             ->setModel($this->model);
     }
 
-    public function getErrorBag(): ErrorBag
+    public function getErrorBag(?InputComponentRecipe $recipe): ErrorBag
     {
-        $bag = $this->errorBag ?? new DefaultErrorBag;
+        $bag = $recipe->errorBag ?? $this->errorBag ?? new DefaultErrorBag;
 
         return $bag->setErrors($this->errors);
     }
