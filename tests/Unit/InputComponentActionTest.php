@@ -7,7 +7,7 @@ use ChatAgency\InputComponentAction\Containers\OutputContainer;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use Tests\Collections;
 
-test('the action returns a data container object', function () {
+test('the action returns a data container object', function (): void {
 
     $action = new InputComponentAction;
     $crud = Collections::simple();
@@ -19,7 +19,7 @@ test('the action returns a data container object', function () {
 
 });
 
-test('the data container has inputs and meta', function () {
+test('the data container has inputs and meta', function (): void {
 
     $action = new InputComponentAction;
     $crud = Collections::simple();
