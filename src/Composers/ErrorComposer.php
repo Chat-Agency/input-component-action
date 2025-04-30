@@ -4,19 +4,18 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction\Composers;
 
-use Chatagency\CrudAssistant\DataContainer;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
+use Chatagency\CrudAssistant\DataContainer;
+use ChatAgency\InputComponentAction\Concerns\IsComposer;
+use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
-use ChatAgency\InputComponentAction\Concerns\IsComposer;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
-use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class ErrorComposer implements ComponentComposer
@@ -35,7 +34,7 @@ final class ErrorComposer implements ComponentComposer
     public function build(): BackendComponent|ContentComponent|ThemeComponent
     {
         $input = $this->input;
-        $recipe = Support::getRecipe($input);
+        $recipe = $this->recipe;
         $errorResolver = $this->errors;
 
         $componentType = $this->resolveErrorType($recipe);

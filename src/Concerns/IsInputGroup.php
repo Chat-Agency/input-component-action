@@ -14,7 +14,6 @@ use ChatAgency\InputComponentAction\Contracts\ErrorBag;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
-use Orchestra\Workbench\Contracts\Recipe;
 
 trait IsInputGroup
 {
