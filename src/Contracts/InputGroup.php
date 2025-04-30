@@ -16,6 +16,7 @@ interface InputGroup
         InputInterface $input,
         InputComponentRecipe $recipe,
         ThemeManager $themeManager,
+        InputGroup $defaultInputGroup,
         ValueBag $values,
         ErrorBag $errors,
         ?ThemeBag $defaultThemeBag = null,

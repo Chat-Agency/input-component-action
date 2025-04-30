@@ -11,6 +11,7 @@ use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -22,6 +23,8 @@ trait IsInputGroup
     private InputComponentRecipe $recipe;
 
     private ThemeManager $themeManager;
+
+    private InputGroup $defaultInputGroup;
 
     private ValueBag $values;
 
@@ -35,6 +38,7 @@ trait IsInputGroup
         InputInterface $input,
         InputComponentRecipe $recipe,
         ThemeManager $themeManager,
+        InputGroup $defaultInputGroup,
         ValueBag $values,
         ErrorBag $errors,
         ?ThemeBag $defaultThemeBag = null,
@@ -42,6 +46,7 @@ trait IsInputGroup
         $this->input = $input;
         $this->recipe = $recipe;
         $this->themeManager = $themeManager;
+        $this->defaultInputGroup = $defaultInputGroup;
         $this->values = $values;
         $this->errors = $errors;
         $this->defaultThemeBag = $defaultThemeBag;

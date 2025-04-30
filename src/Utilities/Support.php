@@ -37,6 +37,7 @@ final class Support
             input: $input,
             recipe: $recipe,
             themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
+            defaultInputGroup: $defaultInputGroup ?? new DefaultInputGroup,
             values: $values,
             errors: $errors,
             defaultThemeBag: self::resolveThemeBag($recipe, $defaultThemeBag),
