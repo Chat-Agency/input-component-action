@@ -14,6 +14,7 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -27,6 +28,7 @@ final class InputComposer implements ComponentComposer
         private InputInterface $input,
         private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
+        private InputGroup $defaultInputGroup,
         private ?ValueBag $values = null,
         private ?ErrorBag $errors = null,
         private ?ThemeBag $themeBag = null,
