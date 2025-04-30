@@ -55,7 +55,9 @@
         "test": "vendor/bin/pest",
         "test-coverage": "vendor/bin/pest --coverage",
         "format": "vendor/bin/pint",
+        "rector": "vendor/bin/rector",
         "qa": [
+            "@composer run rector",
             "@composer run format",
             "@composer run analyse",
             "@composer run test"
