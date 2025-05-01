@@ -98,7 +98,11 @@ final class InputComposer implements ComponentComposer
         }
 
         if (! $recipe->disableInputValue) {
-            $component->setAttribute('value', $value);
+            if ($recipe->valueAsInputContent) {
+                $component->setContent($value);
+            } else {
+                $component->setAttribute('value', $value);
+            }
         }
 
         /**
