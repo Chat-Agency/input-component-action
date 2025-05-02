@@ -1,4 +1,4 @@
-name: Fix PHP code style issues
+name: Laravel Pint
 
 on:
   push:
@@ -19,7 +19,7 @@ jobs:
         with:
           ref: ${{ github.head_ref }}
 
-      - name: Fix PHP code style issues
+      - name: Laravel Pint
         uses: aglipanci/laravel-pint-action@2.5
 
       - name: Commit changes
