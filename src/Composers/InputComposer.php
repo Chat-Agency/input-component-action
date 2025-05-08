@@ -29,8 +29,8 @@ final class InputComposer implements ComponentComposer
         private InputComponentRecipe $recipe,
         private InputGroup $defaultInputGroup,
         private ThemeManager $themeManager,
-        private ?ValueBag $values = null,
-        private ?ErrorBag $errors = null,
+        private ?ValueBag $values,
+        private ?ErrorBag $errors,
         private ?ThemeBag $themeBag = null,
     ) {}
 

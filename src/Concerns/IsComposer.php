@@ -31,10 +31,10 @@ trait IsComposer
         return Support::initGroup(
             input: $input,
             recipe: $recipe,
-            defaultThemeManager: $this->themeManager,
-            defaultInputGroup: $defaultInputGroup,
             values: $this->values,
             errors: $this->errors,
+            defaultThemeManager: $this->themeManager,
+            defaultInputGroup: $defaultInputGroup,
             defaultThemeBag: $this->themeBag,
             parent: $parent,
         );

@@ -29,17 +29,17 @@ final class Support
         return $input->getRecipes()[InputComponentAction::getIdentifier()] ?? new InputComponentRecipe;
     }
 
-    public static function initGroup(InputInterface $input, InputComponentRecipe $recipe, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?ValueBag $values = null, ?ErrorBag $errors = null, ?InputInterface $parent = null): BackendComponent
+    public static function initGroup(InputInterface $input, InputComponentRecipe $recipe, ?ValueBag $values, ?ErrorBag $errors, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?InputInterface $parent = null): BackendComponent
     {
         $group = $recipe->inputGroup ?? $defaultInputGroup ?? new DefaultInputGroup;
 
         $group = $group->inject(
             input: $input,
             recipe: $recipe,
-            themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
-            defaultInputGroup: $defaultInputGroup ?? new DefaultInputGroup,
             values: $values,
             errors: $errors,
+            themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
+            defaultInputGroup: $defaultInputGroup ?? new DefaultInputGroup,
             defaultThemeBag: self::resolveThemeBag($recipe, $defaultThemeBag),
         );
 
