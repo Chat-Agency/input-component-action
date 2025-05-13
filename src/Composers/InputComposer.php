@@ -64,7 +64,7 @@ final class InputComposer implements ComponentComposer
         $theme = $recipe->themeBag?->getInputTheme() ?? $this->themeBag?->getInputTheme();
         $callback = $recipe->hookBag?->getInputHook() ?? null;
 
-        $value = $valueResolver->resolve($input, $recipe);
+        $value = (string) $valueResolver->resolve($input, $recipe);
         $name = $this->resolveInputName($input, $recipe);
         $id = $this->resolveInputId($input, $recipe);
 

@@ -36,7 +36,10 @@ final class DefaultValueBag implements ValueBag
 
         $name = $input->getName();
 
-        $defaultValue = $values[$name] ?? null;
+        if(array_key_exists(key: $name, array: $values)) {
+            return $values[$name];
+        };
+        
         $recipeValue = $recipe->inputValue;
         $modelValue = null;
 
@@ -46,7 +49,7 @@ final class DefaultValueBag implements ValueBag
 
         if (! $ignoreRecipeValue) {
             if (Support::isClosure($recipeValue)) {
-                $value = $recipeValue($input, $values);
+                $value = $recipeValue($input, $values, $model);
             } else {
                 $value = $recipeValue;
             }
