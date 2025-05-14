@@ -4,27 +4,27 @@ declare(strict_types=1);
 
 namespace ChatAgency\InputComponentAction;
 
-use Exception;
+use ChatAgency\BackendComponents\Contracts\BackendComponent;
+use ChatAgency\BackendComponents\Contracts\ContentComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeComponent;
+use ChatAgency\BackendComponents\Contracts\ThemeManager;
+use Chatagency\CrudAssistant\Concerns\IsAction;
+use Chatagency\CrudAssistant\Contracts\ActionInterface;
+use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
-use Chatagency\CrudAssistant\Concerns\IsAction;
-use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Utilities\Support;
-use Chatagency\CrudAssistant\Contracts\ActionInterface;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
-use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
 use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
-use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\BackendComponents\Contracts\ThemeComponent;
-use ChatAgency\BackendComponents\Contracts\BackendComponent;
-use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ValueBag;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
+use ChatAgency\InputComponentAction\Utilities\Support;
+use Exception;
 
 final class InputComponentAction implements ActionInterface
 {
@@ -103,7 +103,9 @@ final class InputComponentAction implements ActionInterface
 
     public function execute(InputCollection|InputInterface|\IteratorAggregate $input)
     {
-        $inputs = $this->output->inputs;
+        /** @var OutputContainer $output */
+        $output = $this->output;
+        $inputs = $output->inputs;
 
         $name = $input->getName();
 

@@ -36,10 +36,10 @@ final class DefaultValueBag implements ValueBag
 
         $name = $input->getName();
 
-        if(array_key_exists(key: $name, array: $values)) {
+        if (array_key_exists(key: $name, array: $values)) {
             return $values[$name];
-        };
-        
+        }
+
         $recipeValue = $recipe->inputValue;
         $modelValue = null;
 
@@ -55,6 +55,6 @@ final class DefaultValueBag implements ValueBag
             }
         }
 
-        return $value ?? $defaultValue ?? $modelValue ?? null;
+        return $value ?? $modelValue ?? null;
     }
 }
