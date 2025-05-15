@@ -14,7 +14,7 @@ use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
@@ -28,7 +28,7 @@ final class LabelComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
-        private ?ThemeBag $themeBag = null,
+        private ?LabelTheme $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -75,7 +75,9 @@ final class LabelComposer implements ComponentComposer
             component: $component,
             closure: $callback->getLabelHook(),
             input: $input,
-            type: $inputType
+            type: $inputType,
+            values: $this->values,
+            errors: $this->errors,
         );
 
         return $component;

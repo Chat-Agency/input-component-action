@@ -14,7 +14,7 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
@@ -28,7 +28,7 @@ class HelpTextComposer
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
-        private ?ThemeBag $themeBag = null,
+        private ?HelpTextTheme $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -43,7 +43,7 @@ class HelpTextComposer
         $callback = $recipe->hookBag?->getInputHook() ?? null;
 
         $attributes = $recipe->attributeBag?->getHelpTextAttributes() ?? null;
-        $theme = $recipe->themeBag?->getLabelTheme() ?? $this->themeBag?->getLabelTheme();
+        $theme = $recipe->themeBag?->getHelpTextTheme() ?? $this->themeBag?->getHelpTextTheme();
 
         $attributes = $this->resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $themes = $this->resolveArrayClosure(value: $theme, input: $input, type: $inputType);
@@ -70,7 +70,9 @@ class HelpTextComposer
             component: $component,
             closure: $callback->getHelpTextHook(),
             input: $input,
-            type: $inputType
+            type: $inputType,
+            values: $this->values,
+            errors: $this->errors,
         );
 
         return $component;

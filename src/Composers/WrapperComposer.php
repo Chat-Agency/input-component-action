@@ -14,8 +14,8 @@ use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class WrapperComposer implements ComponentComposer
@@ -27,7 +27,7 @@ final class WrapperComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
-        private ?ThemeBag $themeBag = null,
+        private ?WrapperTheme $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -60,7 +60,9 @@ final class WrapperComposer implements ComponentComposer
             component: $component,
             closure: $callback->getWrapperHook(),
             input: $input,
-            type: $inputType
+            type: $inputType,
+            values: $this->values,
+            errors: $this->errors,
         );
 
         return $component;

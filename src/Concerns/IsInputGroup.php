@@ -11,9 +11,13 @@ use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Composers\InputComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
+use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 trait IsInputGroup
@@ -30,7 +34,7 @@ trait IsInputGroup
 
     private ErrorManager $errors;
 
-    private ?ThemeBag $defaultThemeBag = null;
+    private ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null;
 
     private ?InputInterface $parent = null;
 
@@ -41,7 +45,7 @@ trait IsInputGroup
         InputGroup $defaultInputGroup,
         ValueManager $values,
         ErrorManager $errors,
-        ?ThemeBag $defaultThemeBag = null,
+        ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null,
     ): static {
         $this->input = $input;
         $this->recipe = $recipe;

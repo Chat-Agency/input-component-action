@@ -17,9 +17,13 @@ use Chatagency\CrudAssistant\InputCollection;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
+use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Managers\DefaultErrorManager;
 use ChatAgency\InputComponentAction\Managers\DefaultValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -36,7 +40,7 @@ final class InputComponentAction implements ActionInterface
 
     private ?InputGroup $defaultInputGroup = null;
 
-    private ?ThemeBag $defaultThemeBag = null;
+    private ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null;
 
     private ?object $model = null;
 
@@ -73,7 +77,7 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function setDefaultThemeBag(ThemeBag $defaultThemeBag): static
+    public function setDefaultThemeBag(ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme $defaultThemeBag): static
     {
         $this->defaultThemeBag = $defaultThemeBag;
 

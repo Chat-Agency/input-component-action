@@ -10,7 +10,8 @@ use ChatAgency\BackendComponents\Contracts\ContentComponent;
 use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
-use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use Closure;
@@ -24,21 +25,6 @@ trait IsComposer
         $this->parent = $parent;
 
         return $this;
-    }
-
-    private function resolveGroup(InputInterface $input, InputComponentRecipe $recipe, InputGroup $defaultInputGroup, ?InputInterface $parent = null): BackendComponent
-    {
-        return Support::initGroup(
-            input: $input,
-            recipe: $recipe,
-            values: $this->values,
-            errors: $this->errors,
-            defaultThemeManager: $this->themeManager,
-            defaultInputGroup: $defaultInputGroup,
-            defaultThemeBag: $this->themeBag,
-            parent: $parent,
-        );
-
     }
 
     private static function resolveStringClosure(InputInterface $input, string|Closure|null $stringClosure, ?string $value = null, ?string $error = null): string
@@ -97,11 +83,17 @@ trait IsComposer
         return $recipe->errorType ?? ComponentEnum::PARAGRAPH;
     }
 
-    private function resolveComponentHook(BackendComponent $component, ?Closure $closure, InputInterface $input, BackedEnum $type): BackendComponent|ContentComponent
-    {
+    private function resolveComponentHook(
+        BackendComponent $component,
+        ?Closure $closure,
+        InputInterface $input,
+        BackedEnum $type,
+        ValueManager $values,
+        ErrorManager $errors,
+    ): BackendComponent|ContentComponent {
         if (Support::isClosure($closure)) {
             /** @var array $closure */
-            return $closure($component, $input, $type);
+            return $closure($component, $input, $type, $values, $errors);
         }
 
         return $component;

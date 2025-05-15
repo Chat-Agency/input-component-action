@@ -10,11 +10,11 @@ use ChatAgency\BackendComponents\Contracts\ThemeComponent;
 use ChatAgency\BackendComponents\Contracts\ThemeManager;
 use ChatAgency\BackendComponents\MainBackendComponent;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use Chatagency\CrudAssistant\DataContainer;
+use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
-use ChatAgency\InputComponentAction\Contracts\ThemeBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
@@ -28,7 +28,7 @@ final class ErrorComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
-        private ?ThemeBag $themeBag = null,
+        private ?ErrorTheme $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -36,11 +36,14 @@ final class ErrorComposer implements ComponentComposer
         $input = $this->input;
         $recipe = $this->recipe;
         $errorResolver = $this->errors;
+        $callback = $recipe?->hookBag ?? new DefaultHookBag;
 
         $componentType = $this->resolveErrorType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
         $component = new MainBackendComponent($componentType, $themeManager);
+
+        $inputType = $this->resolveInputType($recipe);
 
         $theme = $recipe->themeBag?->getErrorTheme() ?? $this->themeBag?->getErrorTheme();
         $themes = $this->resolveArrayClosure(value: $theme, input: $input, type: $componentType);
@@ -54,7 +57,14 @@ final class ErrorComposer implements ComponentComposer
             $component->setThemes($themes);
         }
 
-        new DataContainer;
+        $component = $this->resolveComponentHook(
+            component: $component,
+            closure: $callback->getErrorHook(),
+            input: $input,
+            type: $inputType,
+            values: $this->values,
+            errors: $this->errors,
+        );
 
         return $component;
     }

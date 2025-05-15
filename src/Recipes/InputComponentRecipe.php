@@ -12,16 +12,20 @@ use ChatAgency\InputComponentAction\Contracts\AttributeBag;
 use ChatAgency\InputComponentAction\Contracts\ErrorAttributes;
 use ChatAgency\InputComponentAction\Contracts\ErrorHook;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
 use ChatAgency\InputComponentAction\Contracts\HelpTextAttributes;
 use ChatAgency\InputComponentAction\Contracts\HelpTextHook;
+use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\HookBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\LabelAttributes;
 use ChatAgency\InputComponentAction\Contracts\LabelHook;
+use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Contracts\WrapperAttributes;
 use ChatAgency\InputComponentAction\Contracts\WrapperHook;
+use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use Closure;
 
@@ -56,7 +60,7 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly ?ThemeManager $themeManager = null,
 
         public readonly AttributeBag|WrapperAttributes|LabelAttributes|ErrorAttributes|HelpTextAttributes|null $attributeBag = null,
-        public readonly ?ThemeBag $themeBag = null,
+        public readonly ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $themeBag = null,
         public readonly HookBag|WrapperHook|LabelHook|ErrorHook|HelpTextHook|null $hookBag = null,
 
         public readonly bool $disableWrapper = false,

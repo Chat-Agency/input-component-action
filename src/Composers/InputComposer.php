@@ -14,9 +14,13 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
+use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
@@ -31,7 +35,7 @@ final class InputComposer implements ComponentComposer
         private ThemeManager $themeManager,
         private ?ValueManager $values,
         private ?ErrorManager $errors,
-        private ?ThemeBag $themeBag = null,
+        private ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $themeBag = null,
     ) {}
 
     public function build(): BackendComponent|ContentComponent|ThemeComponent
@@ -121,7 +125,9 @@ final class InputComposer implements ComponentComposer
             component: $component,
             closure: $callback,
             input: $input,
-            type: $inputType
+            type: $inputType,
+            values: $this->values,
+            errors: $this->errors,
         );
 
         return $component;
@@ -140,7 +146,12 @@ final class InputComposer implements ComponentComposer
 
         foreach ($subElements->getInputs() as $element) {
             $elementRecipe = Support::getRecipe($element);
-            $components[] = $this->resolveGroup($element, $elementRecipe, $this->defaultInputGroup, $input);
+            $components[] = $this->resolveGroup(
+                input: $element,
+                recipe: $elementRecipe,
+                defaultInputGroup: $this->defaultInputGroup,
+                parent: $input,
+            );
         }
 
         return $components;
@@ -167,5 +178,24 @@ final class InputComposer implements ComponentComposer
                 $component->setAttribute('checked', 'checked');
             }
         }
+    }
+
+    private function resolveGroup(
+        InputInterface $input,
+        InputComponentRecipe $recipe,
+        InputGroup $defaultInputGroup,
+        ?InputInterface $parent = null,
+    ): BackendComponent {
+        return Support::initGroup(
+            input: $input,
+            recipe: $recipe,
+            values: $this->values,
+            errors: $this->errors,
+            defaultThemeBag: $this->themeBag,
+            defaultThemeManager: $this->themeManager,
+            defaultInputGroup: $defaultInputGroup,
+            parent: $parent,
+        );
+
     }
 }
