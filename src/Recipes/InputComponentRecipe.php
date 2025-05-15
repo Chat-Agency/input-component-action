@@ -9,11 +9,15 @@ use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use Chatagency\CrudAssistant\Concerns\IsRecipe;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\Contracts\AttributeBag;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorAttributes;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\HelpTextAttributes;
 use ChatAgency\InputComponentAction\Contracts\HookBag;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
+use ChatAgency\InputComponentAction\Contracts\LabelAttributes;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Contracts\WrapperAttributes;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use Closure;
 
@@ -47,7 +51,7 @@ final class InputComponentRecipe implements RecipeInterface
 
         public readonly ?ThemeManager $themeManager = null,
 
-        public readonly ?AttributeBag $attributeBag = null,
+        public readonly AttributeBag|WrapperAttributes|LabelAttributes|ErrorAttributes|HelpTextAttributes|null $attributeBag = null,
         public readonly ?ThemeBag $themeBag = null,
         public readonly ?HookBag $hookBag = null,
 
@@ -71,8 +75,8 @@ final class InputComponentRecipe implements RecipeInterface
         public readonly bool $checkable = false,
         public readonly bool $selectable = false,
 
-        public readonly ?ValueBag $valueBag = null,
-        public readonly ?ErrorBag $errorBag = null,
+        public readonly ?ValueManager $valueBag = null,
+        public readonly ?ErrorManager $errorBag = null,
 
     ) {}
 }

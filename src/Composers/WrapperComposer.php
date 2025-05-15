@@ -13,9 +13,9 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class WrapperComposer implements ComponentComposer
@@ -25,8 +25,8 @@ final class WrapperComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private ThemeManager $themeManager,
-        private ?ValueBag $values = null,
-        private ?ErrorBag $errors = null,
+        private ?ValueManager $values = null,
+        private ?ErrorManager $errors = null,
         private ?ThemeBag $themeBag = null,
     ) {}
 

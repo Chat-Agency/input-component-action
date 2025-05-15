@@ -13,10 +13,10 @@ use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Groups\DefaultInputGroup;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -29,7 +29,7 @@ final class Support
         return $input->getRecipes()[InputComponentAction::getIdentifier()] ?? new InputComponentRecipe;
     }
 
-    public static function initGroup(InputInterface $input, InputComponentRecipe $recipe, ?ValueBag $values, ?ErrorBag $errors, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?InputInterface $parent = null): BackendComponent
+    public static function initGroup(InputInterface $input, InputComponentRecipe $recipe, ?ValueManager $values, ?ErrorManager $errors, ?ThemeManager $defaultThemeManager = null, ?InputGroup $defaultInputGroup = null, ?ThemeBag $defaultThemeBag = null, ?InputInterface $parent = null): BackendComponent
     {
         $group = $recipe->inputGroup ?? $defaultInputGroup ?? new DefaultInputGroup;
 

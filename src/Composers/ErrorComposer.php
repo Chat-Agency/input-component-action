@@ -13,9 +13,9 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\DataContainer;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
 final class ErrorComposer implements ComponentComposer
@@ -26,8 +26,8 @@ final class ErrorComposer implements ComponentComposer
         private InputInterface $input,
         private InputComponentRecipe $recipe,
         private ThemeManager $themeManager,
-        private ?ValueBag $values = null,
-        private ?ErrorBag $errors = null,
+        private ?ValueManager $values = null,
+        private ?ErrorManager $errors = null,
         private ?ThemeBag $themeBag = null,
     ) {}
 

@@ -7,7 +7,7 @@ namespace ChatAgency\InputComponentAction\Contracts;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
-interface ErrorBag
+interface ErrorManager
 {
     public function setErrors(array $errors): static;
 

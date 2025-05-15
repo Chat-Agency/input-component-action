@@ -17,8 +17,8 @@ interface InputGroup
         InputComponentRecipe $recipe,
         ThemeManager $themeManager,
         InputGroup $defaultInputGroup,
-        ValueBag $values,
-        ErrorBag $errors,
+        ValueManager $values,
+        ErrorManager $errors,
         ?ThemeBag $defaultThemeBag = null,
     ): static;
 

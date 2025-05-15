@@ -21,5 +21,4 @@ trait HasWrapperAttributes
     {
         return $this->wrapperAttributes;
     }
-
 }

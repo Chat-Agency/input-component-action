@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ChatAgency\InputComponentAction\Bags;
+namespace ChatAgency\InputComponentAction\Managers;
 
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
-final class DefaultErrorBag implements ErrorBag
+final class DefaultErrorManager implements ErrorManager
 {
     private ?array $errors = [];
 

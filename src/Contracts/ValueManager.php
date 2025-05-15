@@ -7,7 +7,7 @@ namespace ChatAgency\InputComponentAction\Contracts;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 
-interface ValueBag
+interface ValueManager
 {
     public function setValues(array $values): static;
 

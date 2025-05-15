@@ -2,14 +2,14 @@
 
 declare(strict_types=1);
 
-namespace ChatAgency\InputComponentAction\Bags;
+namespace ChatAgency\InputComponentAction\Managers;
 
 use Chatagency\CrudAssistant\Contracts\InputInterface;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
-final class DefaultValueBag implements ValueBag
+final class DefaultValueManager implements ValueManager
 {
     private ?array $values = [];
 

@@ -14,14 +14,14 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
-use ChatAgency\InputComponentAction\Bags\DefaultErrorBag;
-use ChatAgency\InputComponentAction\Bags\DefaultValueBag;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\OutputContainer;
-use ChatAgency\InputComponentAction\Contracts\ErrorBag;
+use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
-use ChatAgency\InputComponentAction\Contracts\ValueBag;
+use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Managers\DefaultErrorManager;
+use ChatAgency\InputComponentAction\Managers\DefaultValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 use Exception;
@@ -40,9 +40,9 @@ final class InputComponentAction implements ActionInterface
 
     private ?object $model = null;
 
-    private ?ValueBag $valueBag = null;
+    private ?ValueManager $valueBag = null;
 
-    private ?ErrorBag $errorBag = null;
+    private ?ErrorManager $errorBag = null;
 
     public function __construct(
         private array $values = [],
@@ -87,14 +87,14 @@ final class InputComponentAction implements ActionInterface
         return $this;
     }
 
-    public function setValueBag(ValueBag $valueBag): static
+    public function setValueManager(ValueManager $valueBag): static
     {
         $this->valueBag = $valueBag;
 
         return $this;
     }
 
-    public function setErrorBag(ErrorBag $errorBag): static
+    public function setErrorManager(ErrorManager $errorBag): static
     {
         $this->errorBag = $errorBag;
 
@@ -153,8 +153,8 @@ final class InputComponentAction implements ActionInterface
         return Support::initGroup(
             input: $input,
             recipe: $recipe,
-            values: $this->getValueBag($recipe),
-            errors: $this->getErrorBag($recipe),
+            values: $this->getValueManager($recipe),
+            errors: $this->getErrorManager($recipe),
             defaultThemeManager: $this->defaultThemeManager,
             defaultInputGroup: $this->defaultInputGroup,
             defaultThemeBag: $this->defaultThemeBag,
@@ -175,17 +175,17 @@ final class InputComponentAction implements ActionInterface
         return $composer->build();
     }
 
-    public function getValueBag(?InputComponentRecipe $recipe): ValueBag
+    public function getValueManager(?InputComponentRecipe $recipe): ValueManager
     {
-        $bag = $recipe->valueBag ?? $this->valueBag ?? new DefaultValueBag;
+        $bag = $recipe->valueBag ?? $this->valueBag ?? new DefaultValueManager;
 
         return $bag->setValues($this->values)
             ->setModel($this->model);
     }
 
-    public function getErrorBag(?InputComponentRecipe $recipe): ErrorBag
+    public function getErrorManager(?InputComponentRecipe $recipe): ErrorManager
     {
-        $bag = $recipe->errorBag ?? $this->errorBag ?? new DefaultErrorBag;
+        $bag = $recipe->errorBag ?? $this->errorBag ?? new DefaultErrorManager;
 
         return $bag->setErrors($this->errors);
     }
