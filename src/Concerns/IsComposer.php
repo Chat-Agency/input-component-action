@@ -88,8 +88,8 @@ trait IsComposer
         ?Closure $closure,
         InputInterface $input,
         BackedEnum $type,
-        ValueManager $values,
-        ErrorManager $errors,
+        ?ValueManager $values = null,
+        ?ErrorManager $errors = null,
     ): BackendComponent|ContentComponent {
         if (Support::isClosure($closure)) {
             /** @var array $closure */

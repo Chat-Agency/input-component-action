@@ -45,16 +45,16 @@ final class DefaultValueManager implements ValueManager
 
         $modelValue = $model?->{$name} ?? null;
 
-        $value = null;
+        $recipeValueProcessed = null;
 
         if (! $ignoreRecipeValue) {
             if (Support::isClosure($recipeValue)) {
-                $value = $recipeValue($input, $values, $model);
+                $recipeValueProcessed = $recipeValue($input, $values, $model);
             } else {
-                $value = $recipeValue;
+                $recipeValueProcessed = $recipeValue;
             }
         }
 
-        return $value ?? $modelValue ?? null;
+        return $recipeValueProcessed ?? $modelValue ?? null;
     }
 }
