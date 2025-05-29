@@ -37,7 +37,7 @@ final class InputComponentRecipe implements RecipeInterface
     protected $action = InputComponentAction::class;
 
     public function __construct(
-        public readonly string|Closure|null $inputValue = null,
+        public readonly string|int|Closure|null $inputValue = null,
         public readonly bool $useParentValue = false,
 
         public readonly string|Closure|null $inputError = null,

@@ -11,7 +11,7 @@ use Chatagency\CrudAssistant\DataContainer;
 use Countable;
 use IteratorAggregate;
 
-final class OutputContainer implements ArrayAccess, Countable, DataContainerInterface, IteratorAggregate
+final class InputComponentOutput implements ArrayAccess, Countable, DataContainerInterface, IteratorAggregate
 {
     use IsDataContainer;
 

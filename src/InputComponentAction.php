@@ -15,7 +15,7 @@ use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
-use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use ChatAgency\InputComponentAction\Containers\InputComponentOutput;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
 use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
@@ -52,7 +52,7 @@ final class InputComponentAction implements ActionInterface
         private array $values = [],
         private array $errors = [],
     ) {
-        $this->output = new OutputContainer;
+        $this->output = new InputComponentOutput;
 
         $this->output->inputs = new DataContainer;
         $this->output->meta = new DataContainer;
@@ -107,7 +107,7 @@ final class InputComponentAction implements ActionInterface
 
     public function execute(InputCollection|InputInterface|\IteratorAggregate $input)
     {
-        /** @var OutputContainer $output */
+        /** @var InputComponentOutput $output */
         $output = $this->output;
         $inputs = $output->inputs;
 
