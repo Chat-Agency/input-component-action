@@ -11,7 +11,7 @@ use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class DefaultValueManager implements ValueManager
 {
-    private ?array $values = [];
+    private array $values = [];
 
     private ?object $model = null;
 
@@ -43,7 +43,7 @@ final class DefaultValueManager implements ValueManager
         $recipeValue = $recipe->inputValue;
         $modelValue = null;
 
-        $modelValue = $model?->{$name} ?? null;
+        $modelValue = $model->{$name} ?? null;
 
         $recipeValueProcessed = null;
 

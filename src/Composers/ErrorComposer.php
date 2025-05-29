@@ -36,7 +36,7 @@ final class ErrorComposer implements ComponentComposer
         $input = $this->input;
         $recipe = $this->recipe;
         $errorResolver = $this->errors;
-        $callback = $recipe?->hookBag ?? new DefaultHookBag;
+        $callback = $recipe->hookBag ?? new DefaultHookBag;
 
         $componentType = $this->resolveErrorType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;

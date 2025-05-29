@@ -11,7 +11,7 @@ use ChatAgency\InputComponentAction\Utilities\Support;
 
 final class DefaultErrorManager implements ErrorManager
 {
-    private ?array $errors = [];
+    private array $errors = [];
 
     public function setErrors(array $errors): static
     {

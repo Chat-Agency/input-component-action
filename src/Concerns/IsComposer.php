@@ -92,8 +92,15 @@ trait IsComposer
         ?ErrorManager $errors = null,
     ): BackendComponent|ContentComponent {
         if (Support::isClosure($closure)) {
-            /** @var array $closure */
-            return $closure($component, $input, $type, $values, $errors);
+            $result = $closure(
+                $component,
+                $input,
+                $type,
+                $values,
+                $errors
+            );
+
+            return $result;
         }
 
         return $component;

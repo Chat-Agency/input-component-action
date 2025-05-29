@@ -43,7 +43,7 @@ final class WrapperComposer implements ComponentComposer
 
         $attributes = $recipe->attributeBag?->getInputAttributes() ?? null;
         $theme = $recipe->themeBag?->getWrapperTheme() ?? $this->themeBag?->getWrapperTheme();
-        $callback = $recipe?->hookBag ?? new DefaultHookBag;
+        $callback = $recipe->hookBag ?? new DefaultHookBag;
 
         $attributes = $this->resolveArrayClosure(value: $attributes, input: $input, type: $inputType);
         $theme = $this->resolveArrayClosure($theme, input: $input, type: $inputType);

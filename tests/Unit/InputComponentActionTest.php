@@ -3,7 +3,7 @@
 declare(strict_types=1);
 
 use Chatagency\CrudAssistant\DataContainer;
-use ChatAgency\InputComponentAction\Containers\OutputContainer;
+use ChatAgency\InputComponentAction\Containers\InputComponentOutput;
 use ChatAgency\InputComponentAction\InputComponentAction;
 use Tests\Collections;
 
@@ -15,7 +15,7 @@ test('the action returns a data container object', function (): void {
     $output = $crud->execute($action);
 
     expect($output)
-        ->toBeInstanceOf(OutputContainer::class);
+        ->toBeInstanceOf(InputComponentOutput::class);
 
 });
 
