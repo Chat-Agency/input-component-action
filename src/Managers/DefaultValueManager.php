@@ -9,6 +9,12 @@ use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
+/**
+ * Priorities:
+ * 1 - In $values array
+ * 2 - In $recipe inputValue
+ * 3 - In $model property
+ */
 final class DefaultValueManager implements ValueManager
 {
     private array $values = [];

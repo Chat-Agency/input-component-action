@@ -13,6 +13,7 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
+use ChatAgency\InputComponentAction\Contracts\ErrorBuilder;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
@@ -25,6 +26,7 @@ final class ErrorComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
+        private ErrorBuilder $defaultBuilderBag,
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
@@ -41,7 +43,11 @@ final class ErrorComposer implements ComponentComposer
         $componentType = $this->resolveErrorType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
-        $component = new MainBackendComponent($componentType, $themeManager);
+        $builder = $this->defaultBuilderBag->getErrorBuilder();
+
+        $component = $builder
+            ? $builder::make($componentType)
+            : new MainBackendComponent($componentType, $themeManager);
 
         $inputType = $this->resolveInputType($recipe);
 

@@ -19,7 +19,8 @@ interface InputGroup
         InputGroup $defaultInputGroup,
         ValueManager $values,
         ErrorManager $errors,
-        ?ThemeBag $defaultThemeBag = null,
+        BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultBuilderBag = null,
+        ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null,
     ): static;
 
     public function getGroup(): BackendComponent|ContentComponent;

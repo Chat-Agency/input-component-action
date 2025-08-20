@@ -14,6 +14,7 @@ use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
+use ChatAgency\InputComponentAction\Contracts\LabelBuilder;
 use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -25,6 +26,7 @@ final class LabelComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
+        private LabelBuilder $defaultBuilderBag,
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
@@ -44,7 +46,11 @@ final class LabelComposer implements ComponentComposer
 
         $label = $this->resolveStringClosure($input, $label);
 
-        $component = new MainBackendComponent($componentType, $themeManager);
+        $builder = $this->defaultBuilderBag->getLabelBuilder();
+
+        $component = $builder
+            ? $builder::make($componentType)
+            : new MainBackendComponent($componentType, $themeManager);
 
         $inputType = $this->resolveInputType($recipe);
 

@@ -23,6 +23,7 @@ trait HasLabel
         $composer = new LabelComposer(
             input: $this->input,
             recipe: $this->recipe,
+            defaultBuilderBag: $this->defaultBuilderBag,
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,

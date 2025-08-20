@@ -22,6 +22,7 @@ trait HasWrapper
 
         $composer = new WrapperComposer(
             input: $this->input,
+            defaultBuilderBag: $this->defaultBuilderBag,
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,

@@ -15,6 +15,7 @@ use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
+use ChatAgency\InputComponentAction\Contracts\WrapperBuilder;
 use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
@@ -24,6 +25,7 @@ final class WrapperComposer implements ComponentComposer
 
     public function __construct(
         private InputInterface $input,
+        private WrapperBuilder $defaultBuilderBag,
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
@@ -37,7 +39,11 @@ final class WrapperComposer implements ComponentComposer
         $componentType = $this->resolveWrapperType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
-        $component = new MainBackendComponent($componentType, $themeManager);
+        $builder = $this->defaultBuilderBag->getWrapperBuilder();
+
+        $component = $builder
+            ? $builder::make($componentType)
+            : new MainBackendComponent($componentType, $themeManager);
 
         $inputType = $this->resolveInputType($recipe);
 
