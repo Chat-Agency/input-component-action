@@ -14,6 +14,7 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
+use ChatAgency\InputComponentAction\Bags\DefaultBuilderBag;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\InputComponentOutput;
 use ChatAgency\InputComponentAction\Contracts\BuilderBag;
@@ -187,7 +188,7 @@ final class InputComponentAction implements ActionInterface
 
         $composer = new WrapperComposer(
             input: $input,
-            defaultBuilderBag: $this->defaultBuilderBag,
+            defaultBuilderBag: $this->defaultBuilderBag ?? new DefaultBuilderBag,
             themeManager: Support::resolveThemeManager(recipe: $recipe, defaultThemeManager: $this->defaultThemeManager),
             themeBag: $this->defaultThemeBag,
         );
