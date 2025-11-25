@@ -34,7 +34,9 @@ class LabelContainerGroup implements InputGroup
 
         $components = [];
 
-        $components['label'] = $label->setContent(content: $input, key: 'input');
+        $label->setContent(content: $input, key: 'input');
+
+        $components['label'] = $label;
 
         if ($error) {
             $components['error'] = $error;
