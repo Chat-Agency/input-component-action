@@ -12,7 +12,6 @@ use ChatAgency\BackendComponents\Enums\ComponentEnum;
 use ChatAgency\BackendComponents\Themes\LocalThemeManager;
 use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\Contracts\RecipeInterface;
-use ChatAgency\InputComponentAction\Bags\DefaultBuilderBag;
 use ChatAgency\InputComponentAction\Bags\DefaultThemeBag;
 use ChatAgency\InputComponentAction\Contracts\BuilderBag;
 use ChatAgency\InputComponentAction\Contracts\ErrorBuilder;
@@ -46,7 +45,6 @@ final class Support
         ?ErrorManager $errors,
         ?ThemeManager $defaultThemeManager = null,
         ?InputGroup $defaultInputGroup = null,
-        BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultBuilderBag = null,
         ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null,
         ?InputInterface $parent = null): BackendComponent
     {
@@ -59,7 +57,6 @@ final class Support
             errors: $errors,
             themeManager: $defaultThemeManager ?? self::resolveThemeManager($recipe),
             defaultInputGroup: $defaultInputGroup ?? new DefaultInputGroup,
-            defaultBuilderBag: self::resolveBuilderBag($recipe, $defaultBuilderBag),
             defaultThemeBag: self::resolveThemeBag($recipe, $defaultThemeBag),
         );
 
@@ -75,13 +72,6 @@ final class Support
     public static function resolveThemeManager(RecipeInterface $recipe, $defaultThemeManager = null): ThemeManager
     {
         return $recipe->defaultThemeManager ?? $defaultThemeManager ?? new LocalThemeManager;
-    }
-
-    private static function resolveBuilderBag(
-        RecipeInterface $recipe,
-        BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultThemeBag = null
-    ): BuilderBag {
-        return $recipe->defaultThemeBag ?? $defaultThemeBag ?? new DefaultBuilderBag;
     }
 
     private static function resolveThemeBag(RecipeInterface $recipe, ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null): ThemeBag

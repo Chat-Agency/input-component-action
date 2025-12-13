@@ -23,7 +23,6 @@ trait HasError
         $composer = new ErrorComposer(
             input: $this->input,
             recipe: $this->recipe,
-            defaultBuilderBag: $this->defaultBuilderBag,
             themeManager: $this->themeManager,
             values: $this->values,
             errors: $this->errors,

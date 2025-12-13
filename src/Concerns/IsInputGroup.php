@@ -39,8 +39,6 @@ trait IsInputGroup
 
     private ErrorManager $errors;
 
-    private BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultBuilderBag = null;
-
     private ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null;
 
     private ?InputInterface $parent = null;
@@ -52,7 +50,6 @@ trait IsInputGroup
         InputGroup $defaultInputGroup,
         ValueManager $values,
         ErrorManager $errors,
-        BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultBuilderBag = null,
         ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null,
     ): static {
         $this->input = $input;
@@ -61,7 +58,6 @@ trait IsInputGroup
         $this->defaultInputGroup = $defaultInputGroup;
         $this->values = $values;
         $this->errors = $errors;
-        $this->defaultBuilderBag = $defaultBuilderBag;
         $this->defaultThemeBag = $defaultThemeBag;
 
         return $this;

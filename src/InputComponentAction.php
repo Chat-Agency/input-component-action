@@ -14,21 +14,15 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use Chatagency\CrudAssistant\CrudAssistant;
 use Chatagency\CrudAssistant\DataContainer;
 use Chatagency\CrudAssistant\InputCollection;
-use ChatAgency\InputComponentAction\Bags\DefaultBuilderBag;
 use ChatAgency\InputComponentAction\Composers\WrapperComposer;
 use ChatAgency\InputComponentAction\Containers\InputComponentOutput;
-use ChatAgency\InputComponentAction\Contracts\BuilderBag;
-use ChatAgency\InputComponentAction\Contracts\ErrorBuilder;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
-use ChatAgency\InputComponentAction\Contracts\HelpTextBuilder;
 use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\InputGroup;
-use ChatAgency\InputComponentAction\Contracts\LabelBuilder;
 use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ThemeBag;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
-use ChatAgency\InputComponentAction\Contracts\WrapperBuilder;
 use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Managers\DefaultErrorManager;
 use ChatAgency\InputComponentAction\Managers\DefaultValueManager;
@@ -45,8 +39,6 @@ final class InputComponentAction implements ActionInterface
     private ?ThemeManager $defaultThemeManager = null;
 
     private ?InputGroup $defaultInputGroup = null;
-
-    private BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultBuilderBag = null;
 
     private ThemeBag|WrapperTheme|LabelTheme|ErrorTheme|HelpTextTheme|null $defaultThemeBag = null;
 
@@ -81,13 +73,6 @@ final class InputComponentAction implements ActionInterface
     public function setDefaultInputGroup(InputGroup $defaultInputGroup): static
     {
         $this->defaultInputGroup = $defaultInputGroup;
-
-        return $this;
-    }
-
-    public function setDefaultBuilderBag(BuilderBag|WrapperBuilder|LabelBuilder|ErrorBuilder|HelpTextBuilder|null $defaultBuilderBag)
-    {
-        $this->defaultBuilderBag = $defaultBuilderBag;
 
         return $this;
     }
@@ -174,7 +159,6 @@ final class InputComponentAction implements ActionInterface
             recipe: $recipe,
             values: $this->getValueManager($recipe),
             errors: $this->getErrorManager($recipe),
-            defaultBuilderBag: $this->defaultBuilderBag,
             defaultThemeManager: $this->defaultThemeManager,
             defaultInputGroup: $this->defaultInputGroup,
             defaultThemeBag: $this->defaultThemeBag,
@@ -188,7 +172,6 @@ final class InputComponentAction implements ActionInterface
 
         $composer = new WrapperComposer(
             input: $input,
-            defaultBuilderBag: $this->defaultBuilderBag ?? new DefaultBuilderBag,
             themeManager: Support::resolveThemeManager(recipe: $recipe, defaultThemeManager: $this->defaultThemeManager),
             themeBag: $this->defaultThemeBag,
         );

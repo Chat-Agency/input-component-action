@@ -26,7 +26,6 @@ final class LabelComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
-        private LabelBuilder $defaultBuilderBag,
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
@@ -46,11 +45,7 @@ final class LabelComposer implements ComponentComposer
 
         $label = $this->resolveStringClosure($input, $label);
 
-        $builder = $this->defaultBuilderBag->getLabelBuilder();
-
-        $component = $builder
-            ? $builder::make($componentType)
-            : new MainBackendComponent($componentType, $themeManager);
+        $component = new MainBackendComponent($componentType, $themeManager);
 
         $inputType = $this->resolveInputType($recipe);
 

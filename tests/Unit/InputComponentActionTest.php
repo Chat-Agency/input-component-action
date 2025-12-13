@@ -12,6 +12,7 @@ test('the action returns a data container object', function (): void {
     $action = new InputComponentAction;
     $crud = Collections::simple();
 
+    /** @var InputComponentOutput $output */
     $output = $crud->execute($action);
 
     expect($output)
@@ -24,6 +25,7 @@ test('the data container has inputs and meta', function (): void {
     $action = new InputComponentAction;
     $crud = Collections::simple();
 
+    /** @var InputComponentOutput $output */
     $output = $crud->execute($action);
 
     expect($output->inputs)

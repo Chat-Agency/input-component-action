@@ -14,7 +14,6 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
-use ChatAgency\InputComponentAction\Contracts\HelpTextBuilder;
 use ChatAgency\InputComponentAction\Contracts\HelpTextTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;
@@ -26,7 +25,6 @@ class HelpTextComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
-        private HelpTextBuilder $defaultBuilderBag,
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
@@ -53,11 +51,8 @@ class HelpTextComposer
 
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
-        $builder = $this->defaultBuilderBag->getHelpTextBuilder();
 
-        $component = $builder
-            ? $builder::make($componentType)
-            : new MainBackendComponent($componentType, $themeManager);
+        $component = new MainBackendComponent($componentType, $themeManager);
 
         if ($attributes) {
             $component->setAttributes($attributes);

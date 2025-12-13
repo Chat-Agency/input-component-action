@@ -26,7 +26,6 @@ final class ErrorComposer implements ComponentComposer
     public function __construct(
         private InputInterface $input,
         private InputComponentRecipe $recipe,
-        private ErrorBuilder $defaultBuilderBag,
         private ThemeManager $themeManager,
         private ?ValueManager $values = null,
         private ?ErrorManager $errors = null,
@@ -43,11 +42,7 @@ final class ErrorComposer implements ComponentComposer
         $componentType = $this->resolveErrorType($recipe);
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
-        $builder = $this->defaultBuilderBag->getErrorBuilder();
-
-        $component = $builder
-            ? $builder::make($componentType)
-            : new MainBackendComponent($componentType, $themeManager);
+        $component = new MainBackendComponent($componentType, $themeManager);
 
         $inputType = $this->resolveInputType($recipe);
 
