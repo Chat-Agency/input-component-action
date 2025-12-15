@@ -14,7 +14,6 @@ use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
-use ChatAgency\InputComponentAction\Contracts\LabelBuilder;
 use ChatAgency\InputComponentAction\Contracts\LabelTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
 use ChatAgency\InputComponentAction\Recipes\InputComponentRecipe;

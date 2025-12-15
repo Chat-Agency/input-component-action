@@ -13,7 +13,6 @@ use Chatagency\CrudAssistant\Contracts\InputInterface;
 use ChatAgency\InputComponentAction\Bags\DefaultHookBag;
 use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
-use ChatAgency\InputComponentAction\Contracts\ErrorBuilder;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ErrorTheme;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;

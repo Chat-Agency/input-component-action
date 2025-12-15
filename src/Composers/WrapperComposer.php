@@ -15,7 +15,6 @@ use ChatAgency\InputComponentAction\Concerns\IsComposer;
 use ChatAgency\InputComponentAction\Contracts\ComponentComposer;
 use ChatAgency\InputComponentAction\Contracts\ErrorManager;
 use ChatAgency\InputComponentAction\Contracts\ValueManager;
-use ChatAgency\InputComponentAction\Contracts\WrapperBuilder;
 use ChatAgency\InputComponentAction\Contracts\WrapperTheme;
 use ChatAgency\InputComponentAction\Utilities\Support;
 
