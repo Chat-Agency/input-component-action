@@ -51,7 +51,6 @@ class HelpTextComposer
 
         $themeManager = $recipe->themeManager ?? $this->themeManager;
 
-
         $component = new MainBackendComponent($componentType, $themeManager);
 
         if ($attributes) {
